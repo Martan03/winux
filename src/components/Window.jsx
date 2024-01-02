@@ -40,12 +40,16 @@ function Window({title, url, onClose}) {
     useEffect(() => {
         // Handles window dragging
         const handleMouseMove = (e) => {
+            e.preventDefault();
             if (!isDrag)
                 return;
 
-            setPos({
-                x: e.clientX - startPos.x,
-                y: e.clientY - startPos.y,
+            // Makes dragging bit faster
+            requestAnimationFrame(() => {
+                setPos({
+                    x: e.clientX - startPos.x,
+                    y: e.clientY - startPos.y,
+                });
             });
         };
 
@@ -74,6 +78,7 @@ function Window({title, url, onClose}) {
 
     // Starts window dragging action
     const handleMouseDown = (e) => {
+        e.preventDefault();
         setIsDrag(true);
         setStartPos({
             x: e.clientX - pos.x,
