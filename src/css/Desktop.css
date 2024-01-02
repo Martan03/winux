@@ -23,38 +23,9 @@ a:hover {
     color: #535bf2;
 }
 
-body {
-    margin: 0;
-    display: flex;
-    place-items: center;
-    min-width: 320px;
-    min-height: 100vh;
-}
-
 h1 {
     font-size: 3.2em;
     line-height: 1.1;
-}
-
-button {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: #1a1a1a;
-    cursor: pointer;
-    transition: border-color 0.25s;
-}
-
-button:hover {
-    border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {
@@ -66,13 +37,16 @@ button:focus-visible {
     a:hover {
         color: #747bff;
     }
-
-    button {
-        background-color: #f9f9f9;
-    }
 }
 
 /* Code above will be removed soonish */
+.grid {
+    display: inline-block;
+    max-width: 100%;
+    padding: 10px 5px;
+}
+
+/* Icon styling */
 .icon {
     display: flex;
     flex-direction: column;
@@ -81,11 +55,78 @@ button:focus-visible {
 }
 
 .icon > img {
-    max-width: 50px;
-    max-height: 50px;
+    max-width: 40px;
+    max-height: 40px;
 }
 
 .icon > p {
-    margin-top: 5px;
+    margin-top: 3px;
+    font-size: 15px;
     color: white;
+}
+
+/* Window styling */
+.window {
+    position: absolute;
+    top: 200px;
+    left: 200px;
+    height: 500px;
+    max-height: 100vh;
+    width: 720px;
+    max-width: 100%;
+    border: none;
+    box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff;
+    background: silver;
+    padding: 3px;
+}
+
+.window-bar {
+    height: 22px;
+    width: 100%;
+    font-size: 15px;
+    background: linear-gradient(90deg,navy,#1084d0);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 3px;
+    color: white;
+}
+
+.window-bar > div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.window-bar p {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.window-bar button {
+    width: 16px;
+    height: 16px;
+    margin-bottom: 1px;
+    border: none;
+    background: silver;
+    color: #000;
+    box-shadow:
+        inset -1px -1px #0a0a0a,
+        inset 1px 1px #fff,
+        inset -2px -2px grey,
+        inset 2px 2px #dfdfdf;
+    cursor: pointer;
+}
+
+.window > iframe {
+    position: absolute;
+    top: 30px;
+    left: 5px;
+    height: calc(100% - 35px);
+    width: calc(100% - 10px);
+}
+
+.window-content {
+    color: #050505;
 }
