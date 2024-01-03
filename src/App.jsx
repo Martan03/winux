@@ -15,8 +15,10 @@ function App() {
         ]);
     }
 
-    const onClose = () => {
-        console.log('test');
+    const onClose = (id) => {
+        var win = [...windows];
+        win.splice(id, 1);
+        setWindows(win);
     }
 
     return (

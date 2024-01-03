@@ -92,7 +92,7 @@ function Window({id, title, url, onClose}) {
             style={{top: pos.y, left: pos.x}}
             onMouseDown={handleMouseDown}
         >
-            <WindowBar title={title} onClose={onClose} />
+            <WindowBar title={title} onClose={() => onClose(id)} />
             <div className="window-content">
                 {url ? (
                     <ExtApp url={url} />
