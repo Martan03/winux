@@ -3,38 +3,8 @@ import Terminal from "../apps/Terminal"
 import { useEffect } from "react"
 
 /// Renders window bar
-function WindowBar({title, onClose}) {
-    return (
-        <div className="window-bar">
-            <div>
-                <p>{title}</p>
-            </div>
-            <div>
-                <button onClick={onClose}>X</button>
-            </div>
-        </div>
-    )
-}
-
-/// Renders build in app by its title
-function BuildInApp({title}) {
-    switch (title) {
-        case 'Terminal':
-            return <Terminal />
-        default:
-            return <p>App failed to load</p>
-    }
-}
-
-/// Renders existing app using iframe
-function ExtApp({url}) {
-    return <iframe src={url} />
-}
-
-/// Renders window
-function Window({id, title, url, onClose}) {
+function WindowBar({title, pos, setPos, onClose}) {
     const [isDrag, setIsDrag] = useState(false);
-    const [pos, setPos] = useState({x: 0, y: 0});
     const [startPos, setStartPos] = useState({x: 0, y: 0});
 
     useEffect(() => {
@@ -87,12 +57,48 @@ function Window({id, title, url, onClose}) {
     };
 
     return (
+        <div className="window-bar" onMouseDown={handleMouseDown}>
+            <div>
+                <p>{title}</p>
+            </div>
+            <div>
+                <button onClick={onClose}>X</button>
+            </div>
+        </div>
+    )
+}
+
+/// Renders build in app by its title
+function BuildInApp({title}) {
+    switch (title) {
+        case 'Terminal':
+            return <Terminal />
+        default:
+            return <p>App failed to load</p>
+    }
+}
+
+/// Renders existing app using iframe
+function ExtApp({url}) {
+    return <iframe src={url} />
+}
+
+/// Renders window
+function Window({id, title, url, onClose, onActive}) {
+    const [pos, setPos] = useState({x: 0, y: 0});
+
+    return (
         <div
             className="window"
+            onMouseDown={() => onActive(id)}
             style={{top: pos.y, left: pos.x}}
-            onMouseDown={handleMouseDown}
         >
-            <WindowBar title={title} onClose={() => onClose(id)} />
+            <WindowBar
+                title={title}
+                pos={pos}
+                setPos={setPos}
+                onClose={() => onClose(id)}
+            />
             <div className="window-content">
                 {url ? (
                     <ExtApp url={url} />

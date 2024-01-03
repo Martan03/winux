@@ -15,6 +15,15 @@ function App() {
         ]);
     }
 
+    const moveUp = (id) => {
+        var win = [...windows];
+        const active = win.splice(id, 1);
+        setWindows([
+            ...win,
+            ...active,
+        ]);
+    }
+
     const onClose = (id) => {
         var win = [...windows];
         win.splice(id, 1);
@@ -28,8 +37,10 @@ function App() {
                 <Window
                     key={key}
                     id={key}
+                    url={window.url}
                     title={window.title}
                     onClose={onClose}
+                    onActive={moveUp}
                 />
             ))}
         </>
