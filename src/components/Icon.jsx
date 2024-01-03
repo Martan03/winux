@@ -1,8 +1,8 @@
 /// Renders desktop icon
-function Icon({path, title}) {
+function Icon({id, icon, title, open}) {
     return (
-        <div className="icon">
-            <img src={path} alt={title + " icon"} />
+        <div className="icon" onDoubleClick={() => open(id)}>
+            <img src={icon} alt={title + " icon"} />
             <p>{title}</p>
         </div>
     );

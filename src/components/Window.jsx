@@ -1,5 +1,5 @@
 import { useState } from "react"
-import Terminal from "../Apps/Terminal"
+import Terminal from "../apps/Terminal"
 import { useEffect } from "react"
 
 /// Renders window bar
@@ -32,7 +32,7 @@ function ExtApp({url}) {
 }
 
 /// Renders window
-function Window({title, url, onClose}) {
+function Window({id, title, url, onClose}) {
     const [isDrag, setIsDrag] = useState(false);
     const [pos, setPos] = useState({x: 0, y: 0});
     const [startPos, setStartPos] = useState({x: 0, y: 0});

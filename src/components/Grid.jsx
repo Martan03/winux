@@ -1,11 +1,17 @@
 import Icon from "./Icon";
 
 /// Renders grid of icons
-function Grid({icons}) {
+function Grid({apps, open}) {
     return (
         <div className="grid">
-            {icons.map((icon, id) => (
-                <Icon key={id} path={icon.path} title={icon.title} />
+            {apps.map((app, id) => (
+                <Icon
+                    key={id}
+                    id={id}
+                    icon={app.icon}
+                    title={app.title}
+                    open={open}
+                />
             ))}
         </div>
     )
