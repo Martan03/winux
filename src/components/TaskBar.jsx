@@ -58,7 +58,11 @@ function OpenedApps({windows, setWindows}) {
     return (
         <div className="taskbar-open-apps">
             {windows.map((win, key) => (
-                <div key={key} className="btn" onClick={() => onClick(key)}>
+                <div
+                    key={key}
+                    className={'btn' + (win.focus ? ' focus' : '')}
+                    onClick={() => onClick(key)}
+                >
                     <img src={win.app.icon} />
                     <p>{win.app.title}</p>
                 </div>
