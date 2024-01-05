@@ -154,10 +154,11 @@ h1 {
 }
 
 .taskbar-start-btn {
-    padding: 3px 5px;
-    font-size: 14px;
-    height: 20px;
-    text-align: center;
+    height: 22px;
+    padding: 1px 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .taskbar-divider {
@@ -166,7 +167,7 @@ h1 {
         inset 1px 1px #dfdfdf,
         inset -2px -2px grey,
         inset 2px 2px #fff;
-    height: 20px;
+    height: 22px;
     width: 2px;
     margin: 0px 2px;
 }

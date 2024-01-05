@@ -2,7 +2,7 @@
 function StartButton() {
     return (
         <button className="taskbar-start-btn btn">
-            Start
+            <img src="/icons/start.png" alt="Start" />
         </button>
     )
 }
