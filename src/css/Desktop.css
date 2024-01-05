@@ -171,3 +171,24 @@ h1 {
     width: 2px;
     margin: 0px 2px;
 }
+
+.taskbar-tray {
+    height: 22px;
+    padding: 0 2px;
+    margin: 0 2px;
+    display: flex;
+    align-items: center;
+    color: #101010;
+    font-size: 15px;
+    box-shadow:
+        1px 1px #dfdfdf,
+        -1px -1px gray;
+}
+
+.taskbar-tray p {
+    margin-top: 2px;
+}
+
+.taskbar-spacer {
+    flex-grow: 1;
+}
