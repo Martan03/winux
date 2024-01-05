@@ -24,3 +24,68 @@ body {
     height: 100vh;
     overflow: hidden;
 }
+
+.notepad {
+    display: flex;
+    height: 100%;
+}
+
+.notepad textarea {
+    resize: none;
+    box-shadow:
+        inset -1px -1px #fff,
+        inset 1px 1px grey,
+        inset -2px -2px #dfdfdf,
+        inset 2px 2px #0a0a0a;
+    flex-grow: 1;
+    background-color: #fff;
+    color: black;
+    font-size: 15px;
+    border: none;
+    outline: none;
+    padding: 5px;
+}
+
+::-webkit-scrollbar {
+    width: 16px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #dfdfdf;
+    box-shadow:
+        inset -1px -1px #0a0a0a,
+        inset 1px 1px #fff,
+        inset -2px -2px grey,
+        inset 2px 2px #dfdfdf;
+}
+
+::-webkit-scrollbar-track {
+    background-image: url(/icons/selected.png);
+}
+
+::-webkit-scrollbar-button {
+    box-shadow:
+        inset -1px -1px #0a0a0a,
+        inset 1px 1px #fff,
+        inset -2px -2px grey,
+        inset 2px 2px #dfdfdf;
+    border: none;
+    color: black;
+    background-color: silver;
+    cursor: pointer;
+    padding: 0 2px;
+    width: 16px;
+    height: 16px;
+}
+
+::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: url(/icons/scroll-up.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: url(/icons/scroll-down.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+}

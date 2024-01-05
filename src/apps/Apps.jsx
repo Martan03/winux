@@ -23,5 +23,9 @@ export function getDesktopApps() {
             title: 'Terminal',
             icon: '/icons/cmd.png',
         },
+        {
+            title: 'Notepad',
+            icon: '/icons/cmd.png',
+        },
     ];
 }

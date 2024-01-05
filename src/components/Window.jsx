@@ -1,6 +1,7 @@
 import { useState } from "react"
 import Terminal from "../apps/Terminal"
 import { useEffect } from "react"
+import Notepad from "../apps/Notepad";
 
 /// Renders window bar
 function WindowBar({id, win, windows, setWindows}) {
@@ -116,6 +117,8 @@ function BuildInApp({title}) {
     switch (title) {
         case 'Terminal':
             return <Terminal />
+        case 'Notepad':
+            return <Notepad />
         default:
             return <p>App failed to load</p>
     }
