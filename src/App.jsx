@@ -7,6 +7,7 @@ import TaskBar from './components/TaskBar';
 
 function App() {
     const [windows, setWindows] = useState([]);
+    const [lastId, setLastId] = useState(1);
     const apps = getDesktopApps();
 
     const defocusWindows = () => {
@@ -20,7 +21,7 @@ function App() {
         setWindows([
             ...win,
             {
-                id: win.length,
+                id: lastId,
                 focus: true,
                 pos: {
                     x: -1000, y: -1000
@@ -28,6 +29,7 @@ function App() {
                 app: apps[key],
             }
         ]);
+        setLastId(lastId + 1);
     }
 
     const editWindow = (id, win) => {
@@ -51,6 +53,8 @@ function App() {
     const onClose = (id) => {
         var win = [...windows];
         const removed = win.splice(id, 1)[0];
+        if (removed.focus && win.length > 0)
+            win[win.length - 1].focus = true;
         setWindows(win);
     }
 
