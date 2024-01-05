@@ -3,7 +3,7 @@ import Terminal from "../apps/Terminal"
 import { useEffect } from "react"
 
 /// Renders window bar
-function WindowBar({title, pos, setPos, onClose}) {
+function WindowBar({win, setWindow, onClose}) {
     const [isDrag, setIsDrag] = useState(false);
     const [startPos, setStartPos] = useState({x: 0, y: 0});
 
@@ -16,10 +16,11 @@ function WindowBar({title, pos, setPos, onClose}) {
 
             // Makes dragging bit faster
             requestAnimationFrame(() => {
-                setPos({
+                win.pos = {
                     x: e.clientX - startPos.x,
                     y: e.clientY - startPos.y,
-                });
+                };
+                setWindow(win);
             });
         };
 
@@ -39,30 +40,31 @@ function WindowBar({title, pos, setPos, onClose}) {
         };
     }, [isDrag, startPos]);
 
-    // Centers window
-    useEffect(() => {
-        const initialX = (window.innerWidth - 720) / 2;
-        const initialY = (window.innerHeight - 500) / 2;
-        setPos({ x: initialX, y: initialY });
-      }, []);
-
     // Starts window dragging action
     const handleMouseDown = (e) => {
         e.preventDefault();
         setIsDrag(true);
         setStartPos({
-            x: e.clientX - pos.x,
-            y: e.clientY - pos.y,
+            x: e.clientX - win.pos.x,
+            y: e.clientY - win.pos.y,
         });
     };
 
+    const close = (e) => {
+        e.stopPropagation();
+        onClose();
+    }
+
     return (
-        <div className="window-bar" onMouseDown={handleMouseDown}>
+        <div
+            className={'window-bar' + (win.focus ? ' focus' : '')}
+            onMouseDown={handleMouseDown}
+        >
             <div>
-                <p>{title}</p>
+                <p>{win.app.title}</p>
             </div>
             <div>
-                <button className="btn" onClick={onClose}>X</button>
+                <button className="btn" onMouseDown={close}>X</button>
             </div>
         </div>
     )
@@ -84,26 +86,35 @@ function ExtApp({url}) {
 }
 
 /// Renders window
-function Window({id, title, url, onClose, onActive}) {
-    const [pos, setPos] = useState({x: -1000, y: -1000});
+function Window({id, win, editWindow, onClose, onActive}) {
+    // Centers window
+    useEffect(() => {
+        const initialX = (window.innerWidth - 720) / 2;
+        const initialY = (window.innerHeight - 500) / 2;
+        win.pos = { x: initialX, y: initialY };
+        setWindow(win);
+    }, []);
+
+    const setWindow = (editWin) => {
+        editWindow(id, editWin);
+    }
 
     return (
         <div
             className="window"
             onMouseDown={() => onActive(id)}
-            style={{top: pos.y, left: pos.x}}
+            style={{top: win.pos.y, left: win.pos.x}}
         >
             <WindowBar
-                title={title}
-                pos={pos}
-                setPos={setPos}
+                win={win}
+                setWindow={setWindow}
                 onClose={() => onClose(id)}
             />
             <div className="window-content">
-                {url ? (
-                    <ExtApp url={url} />
+                {win.app.url ? (
+                    <ExtApp url={win.app.url} />
                 ) : (
-                    <BuildInApp title={title} />
+                    <BuildInApp title={win.app.title} />
                 )}
             </div>
         </div>

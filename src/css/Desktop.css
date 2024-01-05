@@ -102,7 +102,7 @@ h1 {
     height: 22px;
     width: 100%;
     font-size: 15px;
-    background: linear-gradient(90deg,navy,#1084d0);
+    background-color: #858585;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -111,6 +111,11 @@ h1 {
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.window-bar.focus {
+    background: linear-gradient(90deg,navy,#1084d0);
+    background-color: transparent;
 }
 
 .window-bar > div {

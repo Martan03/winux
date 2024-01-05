@@ -9,25 +9,48 @@ function App() {
     const [windows, setWindows] = useState([]);
     const apps = getDesktopApps();
 
+    const defocusWindows = () => {
+        var win = [...windows];
+        win = win.map(item => ({...item, focus: false}));
+        return win;
+    }
+
     const addWindow = (key) => {
+        const win = defocusWindows();
         setWindows([
-            ...windows,
-            apps[key],
+            ...win,
+            {
+                id: win.length,
+                focus: true,
+                pos: {
+                    x: -1000, y: -1000
+                },
+                app: apps[key],
+            }
         ]);
     }
 
+    const editWindow = (id, win) => {
+        var newWindows = [...windows];
+        newWindows[id] = win;
+        setWindows(newWindows);
+    }
+
     const moveUp = (id) => {
-        var win = [...windows];
+        var win = defocusWindows();
         const active = win.splice(id, 1);
         setWindows([
             ...win,
-            ...active,
+            {
+                ...active[0],
+                focus: true,
+            }
         ]);
     }
 
     const onClose = (id) => {
         var win = [...windows];
-        win.splice(id, 1);
+        const removed = win.splice(id, 1)[0];
         setWindows(win);
     }
 
@@ -35,12 +58,12 @@ function App() {
         <>
             <Grid apps={apps} open={addWindow} />
             <TaskBar />
-            {windows.map((window, key) => (
+            {windows.map((win, key) => (
                 <Window
-                    key={key}
+                    key={win.id}
                     id={key}
-                    url={window.url}
-                    title={window.title}
+                    win={win}
+                    editWindow={editWindow}
                     onClose={onClose}
                     onActive={moveUp}
                 />
