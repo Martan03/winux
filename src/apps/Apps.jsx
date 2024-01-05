@@ -5,6 +5,10 @@ export function getApps() {
             icon: '/icons/profile-pic.jpg',
             url: 'https://martan03.github.io',
         },
+        {
+            title: 'Terminal',
+            icon: '/icons/cmd.png',
+        },
     ];
 }
 
@@ -12,12 +16,12 @@ export function getDesktopApps() {
     return [
         {
             title: 'My Portfolio',
-            icon: '/icons/profile-pic.jpg',
+            icon: '/icons/internet-explorer.png',
             url: 'https://martan03.github.io',
         },
         {
             title: 'Terminal',
-            icon: '/icons/profile-pic.jpg',
+            icon: '/icons/cmd.png',
         },
     ];
 }
