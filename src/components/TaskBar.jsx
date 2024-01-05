@@ -12,6 +12,13 @@ function StartButton() {
 /// Renders opened apps
 function OpenedApps({windows, setWindows}) {
     const onClick = (id) => {
+        if (windows[id].minimized)
+            maximize(id);
+        else
+            minimize(id);
+    }
+
+    const maximize = (id) => {
         var updated = [...windows];
         updated[updated.length - 1].focus = false;
         updated.splice(id, 1);
@@ -24,6 +31,28 @@ function OpenedApps({windows, setWindows}) {
                 minimized: false,
             }
         ]);
+    }
+
+    const minimize = (id) => {
+        var updated = [...windows];
+        updated[id].minimized = true;
+        if (windows[id].focus) {
+            for (let i = updated.length - 2; i >= 0; i--) {
+                if (!updated[i].minimized) {
+                    [updated[id], updated[i]] = [
+                        {
+                            ...updated[i],
+                            focus: true,
+                        }, {
+                            ...updated[id],
+                            focus: false,
+                        }
+                    ];
+                }
+            }
+        }
+
+        setWindows(updated);
     }
 
     return (

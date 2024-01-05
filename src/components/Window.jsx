@@ -62,8 +62,9 @@ function WindowBar({id, win, windows, setWindows}) {
         e.stopPropagation();
 
         var updated = [...windows];
+        updated[id].minimized = true;
         if (win.focus) {
-            for (let i = updated.length - 1; i >= 0; i--) {
+            for (let i = updated.length - 2; i >= 0; i--) {
                 if (!updated[i].minimized) {
                     [updated[id], updated[i]] = [
                         {
