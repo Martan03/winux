@@ -36,6 +36,7 @@ function OpenedApps({windows, setWindows}) {
     const minimize = (id) => {
         var updated = [...windows];
         updated[id].minimized = true;
+        updated[id].focus = false;
         if (windows[id].focus) {
             for (let i = updated.length - 2; i >= 0; i--) {
                 if (!updated[i].minimized) {
@@ -43,10 +44,8 @@ function OpenedApps({windows, setWindows}) {
                         {
                             ...updated[i],
                             focus: true,
-                        }, {
-                            ...updated[id],
-                            focus: false,
-                        }
+                        },
+                        ...updated[id],
                     ];
                 }
             }

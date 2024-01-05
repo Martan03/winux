@@ -25,7 +25,7 @@ export function getDesktopApps() {
         },
         {
             title: 'Notepad',
-            icon: '/icons/cmd.png',
+            icon: '/icons/notepad.png',
         },
     ];
 }
