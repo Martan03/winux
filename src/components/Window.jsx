@@ -146,11 +146,12 @@ function Window({id, win, windows, setWindows, editWindow}) {
         if (id === windows.length - 1)
             return;
 
-        var updatedWindows = [...windows];
-        updatedWindows.splice(id, 1);
+        var updated = [...windows];
+        updated[updated.length - 1].focus = false;
+        updated.splice(id, 1);
 
         setWindows([
-            ...updatedWindows,
+            ...updated,
             {
                 ...windows[id],
                 focus: true,

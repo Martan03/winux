@@ -42,7 +42,7 @@ function App() {
     return (
         <>
             <Grid apps={apps} open={addWindow} />
-            <TaskBar windows={windows} />
+            <TaskBar windows={windows} setWindows={setWindows} />
             {windows.map((win, key) => (
                 <Window
                     key={win.id}

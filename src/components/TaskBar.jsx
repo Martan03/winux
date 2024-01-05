@@ -10,11 +10,26 @@ function StartButton() {
 }
 
 /// Renders opened apps
-function OpenedApps({windows}) {
+function OpenedApps({windows, setWindows}) {
+    const onClick = (id) => {
+        var updated = [...windows];
+        updated[updated.length - 1].focus = false;
+        updated.splice(id, 1);
+
+        setWindows([
+            ...updated,
+            {
+                ...windows[id],
+                focus: true,
+                minimized: false,
+            }
+        ]);
+    }
+
     return (
         <div className="taskbar-open-apps">
             {windows.map((win, key) => (
-                <div className="btn" key={key}>
+                <div key={key} className="btn" onClick={() => onClick(key)}>
                     <img src={win.app.icon} />
                     <p>{win.app.title}</p>
                 </div>
@@ -57,12 +72,12 @@ function Tray() {
     )
 }
 
-function TaskBar({windows}) {
+function TaskBar({windows, setWindows}) {
     return (
         <div className="taskbar">
             <StartButton />
             <div className="taskbar-divider"></div>
-            <OpenedApps windows={windows} />
+            <OpenedApps windows={windows} setWindows={setWindows} />
             <div className="taskbar-divider"></div>
             <Tray />
         </div>
