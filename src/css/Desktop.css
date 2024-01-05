@@ -164,6 +164,7 @@ h1 {
 
 .taskbar-start-btn {
     height: 22px;
+    min-width: 51px;
     padding: 1px 2px;
     display: flex;
     align-items: center;
@@ -183,6 +184,7 @@ h1 {
 
 .taskbar-tray {
     height: 22px;
+    min-width: 59px;
     padding: 0 2px;
     margin: 0 2px;
     display: flex;
@@ -192,6 +194,7 @@ h1 {
     box-shadow:
         1px 1px #dfdfdf,
         -1px -1px gray;
+    position: relative;
 }
 
 .taskbar-tray p {
@@ -201,11 +204,14 @@ h1 {
 .taskbar-spacer,
 .taskbar-open-apps {
     flex-grow: 1;
+    max-width: calc(100% - 110px);
 }
 
 .taskbar-open-apps {
     display: flex;
     align-items: center;
+    max-width: calc(100% - 110px);
+    overflow: hidden;
     gap: 4px;
 }
 
