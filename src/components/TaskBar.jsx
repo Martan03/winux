@@ -9,6 +9,20 @@ function StartButton() {
     )
 }
 
+/// Renders opened apps
+function OpenedApps({windows}) {
+    return (
+        <div className="taskbar-open-apps">
+            {windows.map((win, key) => (
+                <div className="btn" key={key}>
+                    <img src={win.app.icon} />
+                    <p>{win.app.title}</p>
+                </div>
+            ))}
+        </div>
+    )
+}
+
 /// Renders taskbar tray
 function Tray() {
     const [time, setTime] = useState(new Date());
@@ -43,12 +57,12 @@ function Tray() {
     )
 }
 
-function TaskBar() {
+function TaskBar({windows}) {
     return (
         <div className="taskbar">
             <StartButton />
             <div className="taskbar-divider"></div>
-            <div className="taskbar-spacer"></div>
+            <OpenedApps windows={windows} />
             <div className="taskbar-divider"></div>
             <Tray />
         </div>

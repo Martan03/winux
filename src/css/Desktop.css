@@ -118,6 +118,10 @@ h1 {
     background-color: transparent;
 }
 
+.window-bar.focus:active {
+    cursor: move;
+}
+
 .window-bar > div {
     display: flex;
     align-items: center;
@@ -194,6 +198,33 @@ h1 {
     margin-top: 2px;
 }
 
-.taskbar-spacer {
+.taskbar-spacer,
+.taskbar-open-apps {
     flex-grow: 1;
+}
+
+.taskbar-open-apps {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.taskbar-open-apps > div {
+    height: 22px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 3px;
+    padding: 0 5px;
+}
+
+.taskbar-open-apps > div > img {
+    max-width: 15px;
+    max-height: 15px;
+    margin-top: -1px;
+}
+
+.taskbar-open-apps > div > p {
+    font-size: 13px;
+    margin-top: 2px;
 }

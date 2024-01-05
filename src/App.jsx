@@ -23,6 +23,7 @@ function App() {
             {
                 id: lastId,
                 focus: true,
+                minimized: false,
                 pos: {
                     x: -1000, y: -1000
                 },
@@ -61,7 +62,7 @@ function App() {
     return (
         <>
             <Grid apps={apps} open={addWindow} />
-            <TaskBar />
+            <TaskBar windows={windows}/>
             {windows.map((win, key) => (
                 <Window
                     key={win.id}
