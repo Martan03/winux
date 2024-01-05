@@ -3,7 +3,7 @@ import Terminal from "../apps/Terminal"
 import { useEffect } from "react"
 
 /// Renders window bar
-function WindowBar({win, setWindow, onClose}) {
+function WindowBar({id, win, windows, setWindows}) {
     const [isDrag, setIsDrag] = useState(false);
     const [startPos, setStartPos] = useState({x: 0, y: 0});
 
@@ -16,11 +16,10 @@ function WindowBar({win, setWindow, onClose}) {
 
             // Makes dragging bit faster
             requestAnimationFrame(() => {
-                win.pos = {
+                changePos({
                     x: e.clientX - startPos.x,
                     y: e.clientY - startPos.y,
-                };
-                setWindow(win);
+                });
             });
         };
 
@@ -50,9 +49,49 @@ function WindowBar({win, setWindow, onClose}) {
         });
     };
 
-    const close = (e) => {
+    const changePos = (pos) => {
+        var updated = [...windows];
+        updated[id] = {
+            ...updated[id],
+            pos: pos,
+        };
+        setWindows(updated);
+    }
+
+    const onMinimize = (e) => {
         e.stopPropagation();
-        onClose();
+
+        var updated = [...windows];
+        if (win.focus) {
+            for (let i = updated.length - 1; i >= 0; i--) {
+                if (!updated[i].minimized) {
+                    [updated[id], updated[i]] = [
+                        {
+                            ...updated[i],
+                            focus: true,
+                        }, {
+                            ...updated[id],
+                            focus: false,
+                            minimized: true,
+                        }
+                    ];
+                }
+            }
+        }
+
+        setWindows(updated);
+    }
+
+    const onClose = (e) => {
+        e.stopPropagation();
+
+        var updatedWindows = [...windows];
+        updatedWindows.splice(id, 1);
+
+        if (win.focus && updatedWindows.length > 0)
+            updatedWindows[updatedWindows.length - 1].focus = true;
+
+        setWindows(updatedWindows);
     }
 
     return (
@@ -64,7 +103,8 @@ function WindowBar({win, setWindow, onClose}) {
                 <p>{win.app.title}</p>
             </div>
             <div>
-                <button className="btn" onMouseDown={close}>X</button>
+                <button className="btn" onMouseDown={onMinimize}>_</button>
+                <button className="btn" onMouseDown={onClose}>X</button>
             </div>
         </div>
     )
@@ -86,7 +126,7 @@ function ExtApp({url}) {
 }
 
 /// Renders window
-function Window({id, win, editWindow, onClose, onActive}) {
+function Window({id, win, windows, setWindows, editWindow}) {
     // Centers window
     useEffect(() => {
         const initialX = (window.innerWidth - 720) / 2;
@@ -95,20 +135,40 @@ function Window({id, win, editWindow, onClose, onActive}) {
         setWindow(win);
     }, []);
 
+    if (win.minimized)
+        return;
+
     const setWindow = (editWin) => {
         editWindow(id, editWin);
+    }
+
+    const onActive = () => {
+        if (id === windows.length - 1)
+            return;
+
+        var updatedWindows = [...windows];
+        updatedWindows.splice(id, 1);
+
+        setWindows([
+            ...updatedWindows,
+            {
+                ...windows[id],
+                focus: true,
+            }
+        ]);
     }
 
     return (
         <div
             className="window"
-            onMouseDown={() => onActive(id)}
+            onMouseDown={onActive}
             style={{top: win.pos.y, left: win.pos.x}}
         >
             <WindowBar
+                id={id}
                 win={win}
-                setWindow={setWindow}
-                onClose={() => onClose(id)}
+                windows={windows}
+                setWindows={setWindows}
             />
             <div className="window-content">
                 {win.app.url ? (

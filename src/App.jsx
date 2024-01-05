@@ -39,38 +39,18 @@ function App() {
         setWindows(newWindows);
     }
 
-    const moveUp = (id) => {
-        var win = defocusWindows();
-        const active = win.splice(id, 1);
-        setWindows([
-            ...win,
-            {
-                ...active[0],
-                focus: true,
-            }
-        ]);
-    }
-
-    const onClose = (id) => {
-        var win = [...windows];
-        const removed = win.splice(id, 1)[0];
-        if (removed.focus && win.length > 0)
-            win[win.length - 1].focus = true;
-        setWindows(win);
-    }
-
     return (
         <>
             <Grid apps={apps} open={addWindow} />
-            <TaskBar windows={windows}/>
+            <TaskBar windows={windows} />
             {windows.map((win, key) => (
                 <Window
                     key={win.id}
                     id={key}
                     win={win}
+                    windows={windows}
+                    setWindows={setWindows}
                     editWindow={editWindow}
-                    onClose={onClose}
-                    onActive={moveUp}
                 />
             ))}
         </>
