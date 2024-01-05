@@ -2,10 +2,20 @@
     --prim: #008888;
 }
 
+@font-face {
+    font-family: 'W95Font';
+    src:
+        local('W95Font'),
+        url(../fonts/W95FA/W95FA.otf)
+        format('truetype');
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-font-smoothing: antialiased;
+    font-family: 'W95Font';
 }
 
 body {

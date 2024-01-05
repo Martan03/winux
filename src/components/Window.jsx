@@ -62,7 +62,7 @@ function WindowBar({title, pos, setPos, onClose}) {
                 <p>{title}</p>
             </div>
             <div>
-                <button onClick={onClose}>X</button>
+                <button className="btn" onClick={onClose}>X</button>
             </div>
         </div>
     )
@@ -85,7 +85,7 @@ function ExtApp({url}) {
 
 /// Renders window
 function Window({id, title, url, onClose, onActive}) {
-    const [pos, setPos] = useState({x: 0, y: 0});
+    const [pos, setPos] = useState({x: -1000, y: -1000});
 
     return (
         <div

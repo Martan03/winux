@@ -39,11 +39,25 @@ h1 {
     }
 }
 
+.btn {
+    box-shadow:
+        inset -1px -1px #0a0a0a,
+        inset 1px 1px #fff,
+        inset -2px -2px grey,
+        inset 2px 2px #dfdfdf;
+    border: none;
+    color: black;
+    background-color: silver;
+    cursor: pointer;
+    padding: 0 2px;
+}
+
 /* Code above will be removed soonish */
 .grid {
     display: inline-block;
     max-width: 100%;
     padding: 10px 5px;
+    height: calc(100vh - 28px);
 }
 
 /* Icon styling */
@@ -109,15 +123,6 @@ h1 {
     width: 16px;
     height: 16px;
     margin-bottom: 1px;
-    border: none;
-    background: silver;
-    color: #000;
-    box-shadow:
-        inset -1px -1px #0a0a0a,
-        inset 1px 1px #fff,
-        inset -2px -2px grey,
-        inset 2px 2px #dfdfdf;
-    cursor: pointer;
 }
 
 .window iframe {
@@ -130,4 +135,38 @@ h1 {
 
 .window-content {
     color: #050505;
+}
+
+.taskbar {
+    width: 100%;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    padding: 2px 2px 0 2px;
+    background-color: silver;
+    box-shadow:
+        inset 0px 1px #dfdfdf,
+        inset 0px 2px #fff;
+    z-index: 20;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.taskbar-start-btn {
+    padding: 3px 5px;
+    font-size: 14px;
+    height: 20px;
+    text-align: center;
+}
+
+.taskbar-divider {
+    box-shadow:
+        inset -1px -1px #0a0a0a,
+        inset 1px 1px #dfdfdf,
+        inset -2px -2px grey,
+        inset 2px 2px #fff;
+    height: 20px;
+    width: 2px;
+    margin: 0px 2px;
 }

@@ -3,6 +3,7 @@ import './css/App.css'
 import Grid from './components/Grid';
 import Window from './components/Window';
 import { getDesktopApps } from './apps/Apps';
+import TaskBar from './components/TaskBar';
 
 function App() {
     const [windows, setWindows] = useState([]);
@@ -33,6 +34,7 @@ function App() {
     return (
         <>
             <Grid apps={apps} open={addWindow} />
+            <TaskBar />
             {windows.map((window, key) => (
                 <Window
                     key={key}
