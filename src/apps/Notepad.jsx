@@ -1,7 +1,11 @@
+import { useState } from "react";
+
 function Notepad({text}) {
+    const [value, setValue] = useState(text ?? '');
+
     return (
         <div className="notepad">
-            <textarea>{text ?? ''}</textarea>
+            <textarea value={value} onChange={(e) => setValue(e.value)} />
         </div>
     )
 }
