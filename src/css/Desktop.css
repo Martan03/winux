@@ -244,3 +244,56 @@ h1 {
     font-size: 13px;
     margin-top: 2px;
 }
+
+.start-menu {
+    width: 180px;
+    min-height: 100px;
+    position: fixed;
+    bottom: 26px;
+    left: 0;
+    background-color: silver;
+    box-shadow:
+        inset -1px -1px #0a0a0a,
+        inset 1px 1px #dfdfdf,
+        inset -2px -2px grey,
+        inset 2px 2px #fff;
+    display: flex;
+    padding: 2px;
+}
+
+.start-menu-header {
+    width: 22px;
+    background: linear-gradient(0deg,#1084d0, navy);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 5px;
+}
+
+.start-menu-header p {
+    height: 22px;
+    transform: rotate(270deg);
+}
+
+.start-menu-content {
+    width: 100%;
+}
+
+.start-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #111;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.start-menu-item:hover {
+    background-color: navy;
+    color: white;
+}
+
+.start-menu-item img {
+    max-width: 35px;
+    max-height: 35px;
+}

@@ -4,6 +4,7 @@ import Grid from './components/Grid';
 import Window from './components/Window';
 import { getDesktopApps } from './apps/Apps';
 import TaskBar from './components/TaskBar';
+import StartMenu from './components/StartMenu';
 
 function App() {
     const [windows, setWindows] = useState([]);
@@ -43,6 +44,7 @@ function App() {
                 focus={focus}
                 setFocus={setFocus}
             />
+            <StartMenu />
             {windows.map((win, key) => (
                 <Window
                     key={win.id}

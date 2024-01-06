@@ -66,9 +66,8 @@ function WindowBar({id, win, windows, setWindows, focus, setFocus}) {
         updated[id].minimized = true;
         setWindows(updated);
 
-        if (id !== focus) {
+        if (id !== focus)
             return;
-        }
 
         let max = -1;
         for (let i = 0; i < updated.length; i++) {

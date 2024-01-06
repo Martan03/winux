@@ -20,38 +20,31 @@ function OpenedApps({windows, setWindows, focus, setFocus}) {
 
     const maximize = (id) => {
         var updated = [...windows];
-        updated[updated.length - 1].focus = false;
-        updated.splice(id, 1);
+        updated[id].zIndex = updated[focus] ? updated[focus].zIndex + 1 : 1;
+        updated[id].minimized = false;
 
-        setWindows([
-            ...updated,
-            {
-                ...windows[id],
-                focus: true,
-                minimized: false,
-            }
-        ]);
+        setWindows(updated);
+        setFocus(id);
     }
 
     const minimize = (id) => {
         var updated = [...windows];
         updated[id].minimized = true;
-        updated[id].focus = false;
-        if (windows[id].focus) {
-            for (let i = updated.length - 2; i >= 0; i--) {
-                if (!updated[i].minimized) {
-                    [updated[id], updated[i]] = [
-                        {
-                            ...updated[i],
-                            focus: true,
-                        },
-                        ...updated[id],
-                    ];
-                }
+        setWindows(updated);
+
+        if (id !== focus)
+            return;
+
+        let max = -1;
+        for (let i = 0; i < updated.length; i++) {
+            if (updated[i].minimized)
+                continue;
+
+            if (updated[max]?.zIndex ?? 0 < updated[i].zIndex) {
+                max = i;
             }
         }
-
-        setWindows(updated);
+        setFocus(max);
     }
 
     return (
