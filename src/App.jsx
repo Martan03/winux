@@ -7,26 +7,21 @@ import TaskBar from './components/TaskBar';
 
 function App() {
     const [windows, setWindows] = useState([]);
+    const [focus, setFocus] = useState(-1);
     const [lastId, setLastId] = useState(1);
     const apps = getDesktopApps();
 
-    const defocusWindows = () => {
-        var win = [...windows];
-        win = win.map(item => ({...item, focus: false}));
-        return win;
-    }
-
     const addWindow = (key) => {
-        const win = defocusWindows();
+        setFocus(windows.length);
         setWindows([
-            ...win,
+            ...windows,
             {
                 id: lastId,
-                focus: true,
                 minimized: false,
                 pos: {
                     x: -1000, y: -1000
                 },
+                zIndex: lastId,
                 app: apps[key],
             }
         ]);
@@ -42,7 +37,12 @@ function App() {
     return (
         <>
             <Grid apps={apps} open={addWindow} />
-            <TaskBar windows={windows} setWindows={setWindows} />
+            <TaskBar
+                windows={windows}
+                setWindows={setWindows}
+                focus={focus}
+                setFocus={setFocus}
+            />
             {windows.map((win, key) => (
                 <Window
                     key={win.id}
@@ -50,6 +50,8 @@ function App() {
                     win={win}
                     windows={windows}
                     setWindows={setWindows}
+                    focus={focus}
+                    setFocus={setFocus}
                     editWindow={editWindow}
                 />
             ))}
