@@ -399,6 +399,8 @@ h1 {
     top: 1px;
 }
 
-.term-path {
+.term span,
+.term p {
     font-family: 'MonoPixelated';
+    white-space: pre;
 }

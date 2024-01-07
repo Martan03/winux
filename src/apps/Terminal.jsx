@@ -1,5 +1,24 @@
 import { useState } from "react";
 
+function handleCommand(input, setView, cmdId) {
+    let [cmd, ...args] = input.split(' ').filter(word => word !== '');
+
+    switch (cmd.toLowerCase()) {
+        case "clear":
+            setView([]);
+            break;
+        default:
+            setView(prev => [
+                ...prev,
+                {
+                    cmd: cmdId,
+                    output: `${cmd}: command not found`,
+                }
+            ]);
+            break;
+    }
+}
+
 function Terminal() {
     const [cmd, setCmd] = useState('');
     const [history, setHistory] = useState([]);
@@ -21,18 +40,16 @@ function Terminal() {
             setCmd(history[historyId + 1]);
             setHistoryId(historyId + 1);
             setPos(0);
+        } else if (e.key === 'ArrowDown' && historyId > -1) {
+            setCmd(history[historyId - 1] ?? '');
+            setHistoryId(historyId - 1);
+            setPos(0);
         } else if (e.key === 'End') {
             setPos(cmd.length);
         } else if (e.key === 'Home') {
             setPos(0);
         } else if (e.key === 'Enter') {
-            setView([
-                ...view,
-                {
-                    cmd: history.length,
-                    output: 'Not implemented',
-                },
-            ]);
+            const output = handleCommand(cmd, setView, history.length);
             setHistory([
                 ...history,
                 cmd,
@@ -48,13 +65,15 @@ function Terminal() {
                     <div key={key}>
                         <span className="term-path">visitor@winux: </span>
                         {history[item.cmd]} <br />
-                        {item.output} <br />
+                        {item.output ? (
+                            <p>{item.output}</p>
+                        ) : ''}
                     </div>
                 ))}
                 <span className="term-path">visitor@winux: </span>
-                {cmd.slice(0, pos)}
+                <span>{cmd.slice(0, pos)}</span>
                 <div className="term-cursor"><div></div></div>
-                {cmd.slice(pos)}
+                <span>{cmd.slice(pos)}</span>
                 <input
                     type="text" id="cmdInput" autoFocus
                     value={cmd} onChange={onChange}
