@@ -164,12 +164,25 @@ h1 {
 }
 
 .taskbar-start-btn {
+    width: 51px;
     height: 22px;
-    min-width: 51px;
     padding: 1px 2px;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.taskbar-start-btn.active {
+    box-shadow:
+        inset -1px -1px #fff,
+        inset 1px 1px #0a0a0a,
+        inset -2px -2px #dfdfdf,
+        inset 2px 2px grey;
+}
+
+.taskbar-start-btn.active img {
+    border: 1px dotted black;
+    margin: 1px 1px 0 0;
 }
 
 .taskbar-divider {
@@ -294,6 +307,17 @@ h1 {
 }
 
 .start-menu-item img {
+    width: 100%;
     max-width: 35px;
     max-height: 35px;
+}
+
+.start-menu-item img.sm {
+    padding: 5px;
+}
+
+.start-menu-sep {
+    border-bottom: 1px solid white;
+    border-top: 1px solid gray;
+    margin: 2px 2px;
 }

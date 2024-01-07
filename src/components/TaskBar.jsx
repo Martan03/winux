@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 
 /// Renders start menu button
-function StartButton() {
+function StartButton({startVis, setStartVis}) {
     return (
-        <button className="taskbar-start-btn btn">
+        <button
+            className={'taskbar-start-btn btn' + (startVis ? ' active' : '')}
+            onClick={() => setStartVis(!startVis)}
+        >
             <img src="/icons/start.png" alt="Start" />
         </button>
     )
@@ -97,10 +100,12 @@ function Tray() {
     )
 }
 
-function TaskBar({windows, setWindows, focus, setFocus}) {
+function TaskBar({
+    windows, setWindows, focus, setFocus, startVis, setStartVis
+}) {
     return (
         <div className="taskbar">
-            <StartButton />
+            <StartButton startVis={startVis} setStartVis={setStartVis} />
             <div className="taskbar-divider"></div>
             <OpenedApps
                 windows={windows}

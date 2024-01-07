@@ -7,6 +7,8 @@ import TaskBar from './components/TaskBar';
 import StartMenu from './components/StartMenu';
 
 function App() {
+    const [startVis, setStartVis] = useState(false);
+
     const [windows, setWindows] = useState([]);
     const [focus, setFocus] = useState(-1);
     const [lastId, setLastId] = useState(1);
@@ -43,8 +45,10 @@ function App() {
                 setWindows={setWindows}
                 focus={focus}
                 setFocus={setFocus}
+                startVis={startVis}
+                setStartVis={setStartVis}
             />
-            <StartMenu />
+            <StartMenu startVis={startVis} setStartVis={setStartVis} />
             {windows.map((win, key) => (
                 <Window
                     key={win.id}
