@@ -17,9 +17,9 @@ npm run
 
 ## Detailed description
 
-This website contains replica of **Windows 98**, which I find very nice looking
-+ it's nostalgic. But to be fair, I don't really know Windows terminal, because
-I use Linux *(I use Arch btw)*, so to make things easier, terminal is
+This website contains replica of **Windows 98**, which I find very nice
+looking + it's nostalgic. But to be fair, I don't really know Windows terminal,
+because I use Linux *(I use Arch btw)*, so to make things easier, terminal is
 implemented Linux like. File system is also implemented like on Unix systems (not yet).
 
 This website is still work in progress, so many things are still missing or not
