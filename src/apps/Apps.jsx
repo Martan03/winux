@@ -44,5 +44,15 @@ export function getPrograms() {
             title: 'Terminal',
             icon: '/icons/cmd.png',
         },
-    ]
+    ];
+}
+
+export function getFavourites() {
+    return [
+        {
+            title: 'My Portfolio',
+            icon: '/icons/internet-explorer.png',
+            url: 'https://martan03.github.io',
+        },
+    ];
 }

@@ -1,4 +1,4 @@
-import { getPrograms } from '../apps/Apps';
+import { getFavourites, getPrograms } from '../apps/Apps';
 import Arrow from '../assets/arrow.svg';
 
 function Item({text, icon, iconSm, children}) {
@@ -38,6 +38,7 @@ function StartMenu({startVis, setStartVis, addWindow}) {
         return;
 
     const programs = getPrograms();
+    const favs = getFavourites();
 
     const openWindow = (app) => {
         setStartVis(false);
@@ -61,7 +62,17 @@ function StartMenu({startVis, setStartVis, addWindow}) {
                         ))}
                     </div>
                 </Item>
-                <Item text="Favourites" icon="favourites.png" iconSm />
+                <Item text="Favourites" icon="favourites.png" iconSm>
+                    <div className="start-menu-item-submenu">
+                        {favs.map((item, key) => (
+                            <ItemSm
+                                key={key}
+                                item={item}
+                                addWindow={openWindow}
+                            />
+                        ))}
+                    </div>
+                </Item>
                 <Item text="Documents" icon="documents.png" iconSm />
                 <Item text="Settings" icon="settings.png" />
                 <Item text="Find" icon="search.png" />

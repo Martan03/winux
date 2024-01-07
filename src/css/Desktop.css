@@ -304,6 +304,7 @@ h1 {
     color: #111;
     font-size: 15px;
     cursor: pointer;
+    position: relative;
 }
 
 .start-menu-item p {
@@ -352,8 +353,8 @@ h1 {
 
 .start-menu-item-submenu {
     position: absolute;
-    left: calc(100% - 4px);
-    top: 2px;
+    left: calc(100% - 2px);
+    top: 0;
     min-width: 120px;
     pointer-events: none;
     opacity: 0;
