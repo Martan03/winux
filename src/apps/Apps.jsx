@@ -6,6 +6,10 @@ export function getApps() {
             url: 'https://martan03.github.io',
         },
         {
+            title: 'Notepad',
+            icon: '/icons/notepad.png',
+        },
+        {
             title: 'Terminal',
             icon: '/icons/cmd.png',
         },
@@ -28,4 +32,17 @@ export function getDesktopApps() {
             icon: '/icons/notepad.png',
         },
     ];
+}
+
+export function getPrograms() {
+    return [
+        {
+            title: 'Notepad',
+            icon: '/icons/notepad.png',
+        },
+        {
+            title: 'Terminal',
+            icon: '/icons/cmd.png',
+        },
+    ]
 }

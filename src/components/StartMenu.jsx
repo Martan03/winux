@@ -1,15 +1,48 @@
-function Item({text, icon, iconSm}) {
+import { getPrograms } from '../apps/Apps';
+import Arrow from '../assets/arrow.svg';
+
+function Item({text, icon, iconSm, children}) {
     return (
         <div className="start-menu-item">
-            <img className={iconSm ? 'sm' : ''} src={'/icons/' + icon} />
+            <img
+                className={`icon${iconSm ? ' sm': ''}`}
+                src={'/icons/' + icon}
+            />
             <p>{text}</p>
+            {children ? <>
+                <img className='menu-arrow' src={Arrow}/>
+                {children}
+            </> : ''}
         </div>
     )
 }
 
-function StartMenu({startVis, setStartVis}) {
+function ItemSm({item, addWindow, iconSm, children}) {
+    return (
+        <div className="start-menu-item sm" onClick={() => addWindow(item)}>
+            <img
+                className={`icon${iconSm ? ' sm': ''}`}
+                src={item.icon}
+            />
+            <p>{item.title}</p>
+            {children ? <>
+                <img className='menu-arrow' src={Arrow}/>
+                {children}
+            </> : ''}
+        </div>
+    )
+}
+
+function StartMenu({startVis, setStartVis, addWindow}) {
     if (!startVis)
         return;
+
+    const programs = getPrograms();
+
+    const openWindow = (app) => {
+        setStartVis(false);
+        addWindow(app);
+    }
 
     return (
         <div className="start-menu">
@@ -17,7 +50,17 @@ function StartMenu({startVis, setStartVis}) {
                 <p>Winux98</p>
             </div>
             <div className="start-menu-content">
-                <Item text="Programs" icon="programs.png" iconSm />
+                <Item text="Programs" icon="programs.png" iconSm>
+                    <div className='start-menu-item-submenu'>
+                        {programs.map((item, key) => (
+                            <ItemSm
+                                key={key}
+                                item={item}
+                                addWindow={openWindow}
+                            />
+                        ))}
+                    </div>
+                </Item>
                 <Item text="Favourites" icon="favourites.png" iconSm />
                 <Item text="Documents" icon="documents.png" iconSm />
                 <Item text="Settings" icon="settings.png" />

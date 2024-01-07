@@ -14,7 +14,7 @@ function App() {
     const [lastId, setLastId] = useState(1);
     const apps = getDesktopApps();
 
-    const addWindow = (key) => {
+    const addWindow = (app) => {
         setFocus(windows.length);
         setWindows([
             ...windows,
@@ -25,7 +25,7 @@ function App() {
                     x: -1000, y: -1000
                 },
                 zIndex: lastId,
-                app: apps[key],
+                app: app,
             }
         ]);
         setLastId(lastId + 1);
@@ -48,7 +48,11 @@ function App() {
                 startVis={startVis}
                 setStartVis={setStartVis}
             />
-            <StartMenu startVis={startVis} setStartVis={setStartVis} />
+            <StartMenu
+                startVis={startVis}
+                setStartVis={setStartVis}
+                addWindow={addWindow}
+            />
             {windows.map((win, key) => (
                 <Window
                     key={win.id}

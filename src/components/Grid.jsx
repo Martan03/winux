@@ -7,9 +7,7 @@ function Grid({apps, open}) {
             {apps.map((app, id) => (
                 <Icon
                     key={id}
-                    id={id}
-                    icon={app.icon}
-                    title={app.title}
+                    app={app}
                     open={open}
                 />
             ))}

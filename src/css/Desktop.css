@@ -61,19 +61,19 @@ h1 {
 }
 
 /* Icon styling */
-.icon {
+.grid .icon {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 10px;
 }
 
-.icon > img {
+.grid .icon > img {
     max-width: 40px;
     max-height: 40px;
 }
 
-.icon > p {
+.grid .icon > p {
     margin-top: 3px;
     font-size: 15px;
     color: white;
@@ -161,6 +161,10 @@ h1 {
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 99999;
 }
 
 .taskbar-start-btn {
@@ -259,7 +263,7 @@ h1 {
 }
 
 .start-menu {
-    width: 180px;
+    min-width: 180px;
     min-height: 100px;
     position: fixed;
     bottom: 26px;
@@ -272,6 +276,7 @@ h1 {
         inset 2px 2px #fff;
     display: flex;
     padding: 2px;
+    z-index: 99999;
 }
 
 .start-menu-header {
@@ -301,18 +306,41 @@ h1 {
     cursor: pointer;
 }
 
+.start-menu-item p {
+    flex-grow: 1;
+}
+
 .start-menu-item:hover {
     background-color: navy;
     color: white;
 }
 
-.start-menu-item img {
+.start-menu-item:hover > .start-menu-item-submenu {
+    pointer-events: initial;
+    opacity: 1;
+}
+
+.start-menu-item:hover .menu-arrow {
+    filter: invert();
+}
+
+.menu-arrow {
+    max-width: 15px;
+}
+
+.start-menu-item .icon {
     width: 100%;
     max-width: 35px;
     max-height: 35px;
 }
 
-.start-menu-item img.sm {
+.start-menu-item.sm .icon {
+    max-width: 25px;
+    max-height: 25px;
+    padding: 3px;
+}
+
+.start-menu-item .icon.sm {
     padding: 5px;
 }
 
@@ -320,4 +348,20 @@ h1 {
     border-bottom: 1px solid white;
     border-top: 1px solid gray;
     margin: 2px 2px;
+}
+
+.start-menu-item-submenu {
+    position: absolute;
+    left: calc(100% - 4px);
+    top: 2px;
+    min-width: 120px;
+    pointer-events: none;
+    opacity: 0;
+    padding: 2px;
+    background-color: silver;
+    box-shadow:
+        inset -1px -1px #0a0a0a,
+        inset 1px 1px #dfdfdf,
+        inset -2px -2px grey,
+        inset 2px 2px #fff;
 }
