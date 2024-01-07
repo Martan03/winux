@@ -10,6 +10,14 @@
         format('truetype');
 }
 
+@font-face {
+    font-family: 'MonoPixelated';
+    src:
+        local('MonoPixelated'),
+        url(../fonts/MonoPixelated/Unifontexmono-AL3RA.ttf)
+        format('truetype');
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
