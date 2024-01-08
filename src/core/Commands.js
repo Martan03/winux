@@ -18,6 +18,9 @@ export function execute(input, env, setView) {
         case "ls":
             list(prompt + input, env, setView);
             break;
+        case "mkdir":
+            mkdir(prompt + input, args, env, setView);
+            break;
         default:
             setView(prev => [
                 ...prev,
@@ -68,5 +71,28 @@ function list(cmd, env, setView) {
 }
 
 function mkdir(cmd, args, env, setView) {
-    
+    if (args.length <= 0) {
+        setView(prev => [
+            ...prev,
+            { cmd: cmd, output: "mkdir: missing operand" },
+        ]);
+        return 1;
+    }
+
+    if (!env.fs.createDir(args[0])) {
+        setView(prev => [
+            ...prev,
+            {
+                cmd: cmd,
+                output: `mkdir: cannot create directory '${args[0]}'`
+            },
+        ]);
+        return 1;
+    }
+
+    setView(prev => [
+        ...prev,
+        { cmd: cmd },
+    ]);
+    return 0;
 }

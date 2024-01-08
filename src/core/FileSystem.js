@@ -57,6 +57,8 @@ export class FileSystem {
         bin.add(clear);
         const ls = new File('ls', 'exe', 'ls');
         bin.add(ls);
+        const mkdir = new File('mkdir', 'exe', 'mkdir');
+        bin.add(mkdir);
 
         usr.add(bin);
         this.root.add(usr);
@@ -67,16 +69,19 @@ export class FileSystem {
     }
 
     changeDir(path) {
-        if (path === '/') {
-            this.current = this.root;
-            return true;
-        }
-
         const newPath = path.split('/').filter(part => part !== '');
 
         let current = this.current;
+        if (path.startsWith('/'))
+            current = this.root;
+
         for (const part of newPath) {
+            if (part == '..') {
+                current = current.parent;
+                continue;
+            }
             current = current.get(part);
+
             if (!(current instanceof Directory))
                 return false;
         }
