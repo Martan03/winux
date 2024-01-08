@@ -12,7 +12,7 @@ function handleCommand(input, setView, cmdId) {
                 ...prev,
                 {
                     cmd: cmdId,
-                    output: `${cmd}: command not found`,
+                    output: `bash: ${cmd}: command not found`,
                 }
             ]);
             break;
@@ -75,9 +75,10 @@ function Terminal() {
                 <div className="term-cursor"><div></div></div>
                 <span>{cmd.slice(pos)}</span>
                 <input
-                    type="text" id="cmdInput" autoFocus
+                    type="text" id="cmdInput"
                     value={cmd} onChange={onChange}
                     onKeyDown={onKeyDown}
+                    autoComplete="off" autoFocus
                 />
             </div>
         </label>
