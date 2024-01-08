@@ -1,48 +1,40 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Environment } from "../core/Environment";
+import { execute } from "../core/Commands";
 
-function handleCommand(input, setView, cmdId) {
-    let [cmd, ...args] = input.split(' ').filter(word => word !== '');
+function Input({cmd, cursor}) {
+    return (
+        <>
+            <span>{cmd.slice(0, cursor)}</span>
+            <div className="term-cursor"><div></div></div>
+            <span>{cmd.slice(cursor)}</span>
+        </>
+    )
+}
 
-    if (!cmd) {
-        setView(prev => [
-            ...prev,
-            {
-                cmd: -1,
-                output: null,
-            },
-        ]);
-        return;
-    }
-
-    switch (cmd.toLowerCase()) {
-        case "clear":
-            setView([]);
-            break;
-        default:
-            setView(prev => [
-                ...prev,
-                {
-                    cmd: cmdId,
-                    output: `bash: ${cmd}: command not found`,
-                }
-            ]);
-            break;
-    }
+function Prompt({env, cmd, cursor}) {
+    return (
+        <>
+            <span>visitor@winux {env.fs.current.getPath()}$ </span>
+            <Input cmd={cmd} cursor={cursor} />
+        </>
+    )
 }
 
 function Terminal() {
+    const [env, setEnv] = useState(new Environment());
+
     const [cmd, setCmd] = useState('');
     const [history, setHistory] = useState([]);
     const [historyId, setHistoryId] = useState(-1);
     const [view, setView] = useState([]);
     const [pos, setPos] = useState(0);
 
-    useEffect(() => {
-        if (history.length <= 0)
-            return;
+    const term = useRef(null);
 
-        handleCommand(history[history.length - 1], setView, history.length - 1);
-    }, [history, setView]);
+    useEffect(() => {
+        term.current.scrollTop = term.current.scrollHeight;
+    }, [view]);
 
     const onChange = (e) => {
         setCmd(e.target.value);
@@ -67,6 +59,7 @@ function Terminal() {
         } else if (e.key === 'Home') {
             setPos(0);
         } else if (e.key === 'Enter') {
+            execute(cmd, env, setView);
             setHistoryId(-1);
             setHistory(prev => [
                 ...prev,
@@ -78,20 +71,16 @@ function Terminal() {
 
     return (
         <label htmlFor="cmdInput">
-            <div className="term" htmlFor="cmdInput">
+            <div className="term" htmlFor="cmdInput" ref={term}>
                 {view.map((item, key) => (
                     <div key={key}>
-                        <span className="term-path">visitor@winux: </span>
-                        {history[item.cmd]} <br />
+                        {item.cmd} <br />
                         {item.output ? (
                             <p>{item.output}</p>
                         ) : ''}
                     </div>
                 ))}
-                <span className="term-path">visitor@winux: </span>
-                <span>{cmd.slice(0, pos)}</span>
-                <div className="term-cursor"><div></div></div>
-                <span>{cmd.slice(pos)}</span>
+                <Prompt env={env} cmd={cmd} cursor={pos} />
                 <input
                     type="text" id="cmdInput"
                     value={cmd} onChange={onChange}

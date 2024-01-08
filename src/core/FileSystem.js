@@ -40,10 +40,26 @@ class Directory {
     }
 }
 
-class FileSystem {
+export class FileSystem {
     constructor() {
         this.root = new Directory('/');
         this.current = this.root;
+        this.build();
+    }
+
+    build() {
+        const usr = new Directory('usr');
+        const bin = new Directory('bin');
+
+        const cd = new File('cd', 'exe', 'cd');
+        bin.add(cd);
+        const clear = new File('clear', 'exe', 'clear');
+        bin.add(clear);
+        const ls = new File('ls', 'exe', 'ls');
+        bin.add(ls);
+
+        usr.add(bin);
+        this.root.add(usr);
     }
 
     get(name) {
@@ -58,10 +74,10 @@ class FileSystem {
 
         const newPath = path.split('/').filter(part => part !== '');
 
-        let current = this.root;
+        let current = this.current;
         for (const part of newPath) {
             current = current.get(part);
-            if (!(child instanceof Directory))
+            if (!(current instanceof Directory))
                 return false;
         }
 
@@ -71,15 +87,28 @@ class FileSystem {
 
     createFile(name, content = '', type = 'txt') {
         const file = new File(name, content, type);
-        this.current.add(file);
+        return this.current.add(file);
     }
 
     createDir(name) {
         const dir = new Directory(name);
-        this.current.add(dir);
+        return this.current.add(dir);
     }
 
     remove(name) {
         this.current.remove(name);
+    }
+
+    find(path) {
+        const newPath = path.split('/').filter(part => part !== '');
+
+        let current = this.root;
+        for (const part of newPath) {
+            current = current.get(part);
+            if (!(current instanceof Directory))
+                return null;
+        }
+
+        return current;
     }
 }
