@@ -1,7 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function handleCommand(input, setView, cmdId) {
     let [cmd, ...args] = input.split(' ').filter(word => word !== '');
+
+    if (!cmd) {
+        setView(prev => [
+            ...prev,
+            {
+                cmd: -1,
+                output: null,
+            },
+        ]);
+        return;
+    }
 
     switch (cmd.toLowerCase()) {
         case "clear":
@@ -26,6 +37,13 @@ function Terminal() {
     const [view, setView] = useState([]);
     const [pos, setPos] = useState(0);
 
+    useEffect(() => {
+        if (history.length <= 0)
+            return;
+
+        handleCommand(history[history.length - 1], setView, history.length - 1);
+    }, [history, setView]);
+
     const onChange = (e) => {
         setCmd(e.target.value);
         setPos(e.target.selectionStart)
@@ -49,9 +67,9 @@ function Terminal() {
         } else if (e.key === 'Home') {
             setPos(0);
         } else if (e.key === 'Enter') {
-            const output = handleCommand(cmd, setView, history.length);
-            setHistory([
-                ...history,
+            setHistoryId(-1);
+            setHistory(prev => [
+                ...prev,
                 cmd,
             ]);
             setCmd('');

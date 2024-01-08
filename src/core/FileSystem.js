@@ -46,6 +46,10 @@ class FileSystem {
         this.current = this.root;
     }
 
+    get(name) {
+        return this.current.get(name);
+    }
+
     changeDir(path) {
         if (path === '/') {
             this.current = this.root;
