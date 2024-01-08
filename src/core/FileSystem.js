@@ -51,8 +51,6 @@ export class FileSystem {
         const usr = new Directory('usr');
         const bin = new Directory('bin');
 
-        const cd = new File('cd', 'exe', 'cd');
-        bin.add(cd);
         const clear = new File('clear', 'exe', 'clear');
         bin.add(clear);
         const ls = new File('ls', 'exe', 'ls');

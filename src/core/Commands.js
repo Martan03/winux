@@ -22,10 +22,21 @@ export function execute(input, env, setView) {
             mkdir(prompt + input, args, env, setView);
             break;
         default:
+            internal(cmd, args, prompt + input, env, setView);
+            break;
+    }
+}
+
+function internal(cmd, args, prompt, env, setView) {
+    switch (cmd) {
+        case "cd":
+            changeDir(prompt, args, env, setView);
+            break;
+        default:
             setView(prev => [
                 ...prev,
                 {
-                    cmd: prompt + input,
+                    cmd: prompt,
                     output: `bash: ${cmd}: command not found`,
                 }
             ]);
