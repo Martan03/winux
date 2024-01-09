@@ -32,6 +32,9 @@ function internal(cmd, args, prompt, env, setView) {
         case "cd":
             changeDir(prompt, args, env, setView);
             break;
+        case "help":
+            help(prompt, setView);
+            break;
         default:
             setView(prev => [
                 ...prev,
@@ -68,6 +71,19 @@ function changeDir(cmd, args, env, setView) {
 
 function clear(setView) {
     setView([]);
+}
+
+function help(cmd, setView) {
+    setView(prev => [
+        ...prev,
+        {
+            cmd: cmd,
+            output:
+                "Welcome in winux by Martan03\n\n" +
+                "Commands:\n" +
+                "    cd"
+        }
+    ])
 }
 
 function list(cmd, env, setView) {
