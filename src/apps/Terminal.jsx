@@ -86,6 +86,7 @@ function Terminal({id, fs, setFs}) {
                     value={cmd} onChange={onChange}
                     onKeyDown={onKeyDown}
                     autoComplete="off" autoFocus
+                    autoCapitalize="off"
                 />
             </div>
         </label>
