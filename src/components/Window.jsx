@@ -145,8 +145,8 @@ function Window({
 }) {
     // Centers window
     useEffect(() => {
-        const initialX = (window.innerWidth - 720) / 2;
-        const initialY = (window.innerHeight - 500) / 2;
+        const initialX = Math.max((window.innerWidth - 720) / 2, 0);
+        const initialY = Math.max((window.innerHeight - 500) / 2, 0);
         win.pos = { x: initialX, y: initialY };
         setWindow(win);
     }, []);
