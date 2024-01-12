@@ -1,12 +1,19 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './css/App.css'
 import Grid from './components/Grid';
 import Window from './components/Window';
 import { getDesktopApps } from './apps/Apps';
 import TaskBar from './components/TaskBar';
 import StartMenu from './components/StartMenu';
+import { FileSystem } from './core/FileSystem';
 
 function App() {
+    const [fs, setFs] = useState(new FileSystem());
+
+    useEffect(() => {
+        console.log(fs);
+    }, [fs])
+
     const [startVis, setStartVis] = useState(false);
 
     const [windows, setWindows] = useState([]);
@@ -39,7 +46,7 @@ function App() {
 
     return (
         <>
-            <Grid apps={apps} open={addWindow} />
+            <Grid apps={apps} open={addWindow} fs={fs} />
             <TaskBar
                 windows={windows}
                 setWindows={setWindows}
@@ -63,6 +70,8 @@ function App() {
                     focus={focus}
                     setFocus={setFocus}
                     editWindow={editWindow}
+                    fs={fs}
+                    setFs={setFs}
                 />
             ))}
         </>

@@ -123,10 +123,10 @@ function WindowBar({id, win, windows, setWindows, focus, setFocus}) {
 }
 
 /// Renders build in app by its title
-function BuildInApp({title}) {
+function BuildInApp({id, title, fs, setFs}) {
     switch (title) {
         case 'Terminal':
-            return <Terminal />
+            return <Terminal id={id} fs={fs} setFs={setFs} />
         case 'Notepad':
             return <Notepad />
         default:
@@ -140,7 +140,9 @@ function ExtApp({url}) {
 }
 
 /// Renders window
-function Window({id, win, windows, setWindows, focus, setFocus, editWindow}) {
+function Window({
+    id, win, windows, setWindows, focus, setFocus, editWindow, fs, setFs
+}) {
     // Centers window
     useEffect(() => {
         const initialX = (window.innerWidth - 720) / 2;
@@ -157,6 +159,9 @@ function Window({id, win, windows, setWindows, focus, setFocus, editWindow}) {
     }
 
     const onFocus = () => {
+        if (id == focus)
+            return;
+
         var win = [...windows];
         win[id].zIndex = win[focus] ? win[focus].zIndex + 1 : 1;
         setWindows(win);
@@ -181,7 +186,11 @@ function Window({id, win, windows, setWindows, focus, setFocus, editWindow}) {
                 {win.app.url ? (
                     <ExtApp url={win.app.url} />
                 ) : (
-                    <BuildInApp title={win.app.title} />
+                    <BuildInApp
+                        id={id}
+                        title={win.app.title}
+                        fs={fs} setFs={setFs}
+                    />
                 )}
             </div>
         </div>

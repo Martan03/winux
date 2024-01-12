@@ -21,8 +21,8 @@ function Prompt({env, cmd, cursor}) {
     )
 }
 
-function Terminal() {
-    const [env, setEnv] = useState(new Environment());
+function Terminal({id, fs, setFs}) {
+    const [env, setEnv] = useState(new Environment(fs));
 
     const [cmd, setCmd] = useState('');
     const [history, setHistory] = useState([]);
@@ -70,8 +70,8 @@ function Terminal() {
     }
 
     return (
-        <label htmlFor="cmdInput">
-            <div className="term" htmlFor="cmdInput" ref={term}>
+        <label htmlFor={`cmdInput${id}`}>
+            <div className="term" ref={term}>
                 {view.map((item, key) => (
                     <div key={key}>
                         {item.cmd} <br />
@@ -82,7 +82,7 @@ function Terminal() {
                 ))}
                 <Prompt env={env} cmd={cmd} cursor={pos} />
                 <input
-                    type="text" id="cmdInput"
+                    type="text" id={`cmdInput${id}`}
                     value={cmd} onChange={onChange}
                     onKeyDown={onKeyDown}
                     autoComplete="off" autoFocus

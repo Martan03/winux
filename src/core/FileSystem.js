@@ -1,5 +1,6 @@
 class File {
-    constructor(name, type, value) {
+    constructor(name, type, value, icon = null) {
+        this.icon = icon;
         this.name = name;
         this.type = type;
         this.value = value;
@@ -57,8 +58,22 @@ export class FileSystem {
         bin.add(ls);
         const mkdir = new File('mkdir', 'exe', 'mkdir');
         bin.add(mkdir);
-
         usr.add(bin);
+
+        const portfolio = new File(
+            'My Porfolio', 'app', '', './icons/internet-explorer.png'
+        );
+
+        const home = new Directory('home');
+        const visitor = new Directory('visitor');
+        const desktop = new Directory('Desktop');
+
+        desktop.add(portfolio);
+
+        visitor.add(desktop);
+        home.add(visitor);
+
+        this.root.add(home);
         this.root.add(usr);
     }
 
@@ -75,7 +90,8 @@ export class FileSystem {
 
         for (const part of newPath) {
             if (part == '..') {
-                current = current.parent;
+                if (current.parent)
+                    current = current.parent;
                 continue;
             }
             current = current.get(part);
