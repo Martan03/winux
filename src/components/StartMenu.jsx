@@ -6,7 +6,7 @@ function Item({text, icon, iconSm, children}) {
         <div className="start-menu-item">
             <img
                 className={`icon${iconSm ? ' sm': ''}`}
-                src={'/icons/' + icon}
+                src={'./icons/' + icon}
             />
             <p>{text}</p>
             {children ? <>
