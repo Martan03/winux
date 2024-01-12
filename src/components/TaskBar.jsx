@@ -7,7 +7,7 @@ function StartButton({startVis, setStartVis}) {
             className={'taskbar-start-btn btn' + (startVis ? ' active' : '')}
             onClick={() => setStartVis(!startVis)}
         >
-            <img src="/icons/start.png" alt="Start" />
+            <img src="./icons/start.png" alt="Start" />
         </button>
     )
 }

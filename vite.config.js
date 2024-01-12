@@ -9,7 +9,7 @@ export default defineConfig(({command}) => {
   }
 
   if (command !== 'serve') {
-    config.base = './winux';
+    config.base = '/winux';
   }
 
   return config;
