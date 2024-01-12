@@ -26,7 +26,7 @@ implemented Linux like. File system is also implemented like on Unix systems
 (not fully yet).
 
 This website is still work in progress, so many things are still missing or not
-fully functioning. Terminal is still far from finished and file system works
+fully functioning. Terminal is still far from finished and file system
 resets for every terminal (and doesn't work with the desktop yet)
 
 ### Motivation
