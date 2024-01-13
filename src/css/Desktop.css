@@ -406,4 +406,5 @@ h1 {
 .term p {
     font-family: 'MonoPixelated';
     white-space: pre;
+    line-height: 16px;
 }

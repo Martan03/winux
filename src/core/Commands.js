@@ -9,6 +9,9 @@ export function execute(input, env, setView) {
 
     const file = env.fs.get(env.bin, cmd);
     switch (file?.value) {
+        case "cat":
+            cat(prompt + input, args, env, setView);
+            break;
         case "cd":
             changeDir(prompt + input, args, env, setView);
             break;
@@ -56,6 +59,31 @@ function trueCommand(cmd, setView) {
         { cmd: cmd }
     ]);
     return 0;
+}
+
+function cat(cmd, args, env, setView) {
+    if (args.length !== 1) {
+        setView(prev => [
+            ...prev,
+            { cmd, output: 'bash: cat: Invalid number of arguments' },
+        ]);
+        return 1;
+    }
+
+    const file = env.fs.get(env.current, args[0]);
+    if (file && !file.children) {
+        setView(prev => [
+            ...prev,
+            { cmd, output: file.value },
+        ]);
+        return 0;
+    }
+
+    setView(prev => [
+        ...prev,
+        { cmd, output: `bash: cat: file '${args[0]}' doesn't exist` },
+    ]);
+    return 1;
 }
 
 function changeDir(cmd, args, env, setView) {
