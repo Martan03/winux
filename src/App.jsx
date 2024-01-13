@@ -14,6 +14,8 @@ function App() {
         console.log(fs);
     }, [fs])
 
+    const fs = useFs();
+
     const [startVis, setStartVis] = useState(false);
 
     const [windows, setWindows] = useState([]);
