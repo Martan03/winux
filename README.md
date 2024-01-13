@@ -6,9 +6,11 @@ Website containing desktop inspired by **Windows 98** and **Linux**.
 
 Desk site is created using **React** with **Javascript**
 *(I should've used Typescript).*
-I don't use any libraries as of right now, everythings is done by me.
 
-React project itself was generated using Vite.
+Only package I used is `gh-pages` in order to deploy website to
+[Github pages](martan03.github.io/winux).
+
+React project itself was generated using [Vite](https://vitejs.dev).
 
 ### Usage:
 You can run the website using **npm**:
