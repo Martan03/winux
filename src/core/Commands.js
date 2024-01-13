@@ -32,6 +32,9 @@ function internal(cmd, args, prompt, env, setView) {
         case "cd":
             changeDir(prompt, args, env, setView);
             break;
+        case "echo":
+            echo(prompt, args, setView);
+            break;
         case "help":
             help(prompt, setView);
             break;
@@ -77,6 +80,18 @@ function changeDir(cmd, args, env, setView) {
 
 function clear(setView) {
     setView([]);
+    return 0;
+}
+
+function echo(cmd, args, setView) {
+    let output = '';
+    for (const arg of args) {
+        output = `${output}${arg} `;
+    }
+    setView(prev => [
+        ...prev,
+        { cmd, output }
+    ]);
     return 0;
 }
 
