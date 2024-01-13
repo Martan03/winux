@@ -15,13 +15,13 @@ function Input({cmd, cursor}) {
 function Prompt({env, cmd, cursor}) {
     return (
         <>
-            <span>visitor@winux {env.fs.current.getPath()}$ </span>
+            <span>visitor@winux {env.fs.getPath(env.current)}$ </span>
             <Input cmd={cmd} cursor={cursor} />
         </>
     )
 }
 
-function Terminal({id, fs, setFs}) {
+function Terminal({id, fs}) {
     const [env, setEnv] = useState(new Environment(fs));
 
     const [cmd, setCmd] = useState('');

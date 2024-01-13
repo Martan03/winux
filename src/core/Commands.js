@@ -1,13 +1,13 @@
 export function execute(input, env, setView) {
     let [cmd, ...args] = input.split(' ').filter(word => word !== '');
-    const prompt = `visitor@winux ${env.fs.current.getPath()}$ `;
+    const prompt = `visitor@winux ${env.fs.getPath(env.current)}$ `;
 
     if (!cmd) {
         trueCommand(prompt, setView);
         return;
     }
 
-    const file = env.bin.get(cmd);
+    const file = env.fs.get(env.bin, cmd);
     switch (file?.value) {
         case "cd":
             changeDir(prompt + input, args, env, setView);
@@ -56,8 +56,14 @@ function trueCommand(cmd, setView) {
 }
 
 function changeDir(cmd, args, env, setView) {
-    if (args.length <= 0 || env.fs.changeDir(args[0]))
+    if (args.length <= 0)
         return trueCommand(cmd, setView);
+
+    const current = env.fs.changeDir(env.current, args[0]);
+    if (current) {
+        env.current = current;
+        return trueCommand(cmd, setView);
+    }
 
     setView(prev => [
         ...prev,
@@ -66,7 +72,7 @@ function changeDir(cmd, args, env, setView) {
             output: `bash: cd: ${args[0]}: No such file or directory`,
         },
     ]);
-    return 1;
+    return 2;
 }
 
 function clear(setView) {
@@ -88,7 +94,7 @@ function help(cmd, setView) {
 
 function list(cmd, env, setView) {
     let res = '';
-    for (let item in env.fs.current.children) {
+    for (let item in env.current.children) {
         res += `${item} `;
     }
     setView(prev => [
@@ -106,7 +112,7 @@ function mkdir(cmd, args, env, setView) {
         return 1;
     }
 
-    if (!env.fs.createDir(args[0])) {
+    if (!env.fs.createDir(env.current, args[0])) {
         setView(prev => [
             ...prev,
             {

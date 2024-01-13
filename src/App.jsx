@@ -5,16 +5,10 @@ import Window from './components/Window';
 import { getDesktopApps } from './apps/Apps';
 import TaskBar from './components/TaskBar';
 import StartMenu from './components/StartMenu';
-import { FileSystem } from './core/FileSystem';
+import useFs from './core/FileSystem';
 
 function App() {
-    const [fs, setFs] = useState(new FileSystem());
-
-    useEffect(() => {
-        console.log(fs);
-    }, [fs])
-
-    const test = useFs();
+    const fs = useFs();
 
     const [startVis, setStartVis] = useState(false);
 
@@ -48,7 +42,7 @@ function App() {
 
     return (
         <>
-            <Grid apps={apps} open={addWindow} fs={fs} />
+            <Grid apps={apps} open={addWindow} />
             <TaskBar
                 windows={windows}
                 setWindows={setWindows}
@@ -73,7 +67,6 @@ function App() {
                     setFocus={setFocus}
                     editWindow={editWindow}
                     fs={fs}
-                    setFs={setFs}
                 />
             ))}
         </>
