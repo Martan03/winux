@@ -13,6 +13,11 @@ const useFs = () => {
         bin.children.ls = ls;
         bin.children.mkdir = mkdir;
 
+        const home = {name: 'home', children: {}, parent: root};
+        root.children.home = home;
+        const visitor = {name: 'visitor', children: {}, parent: home};
+        home.children.visitor = visitor;
+
         usr.children.bin = bin;
         root.children.usr = usr;
 
@@ -92,6 +97,9 @@ const useFs = () => {
             path = `/${current.name}${path}`;
             current = current.parent;
         }
+
+        if (path.startsWith('/home/visitor'))
+            path = path.replace('/home/visitor', '~');
 
         return path;
     }

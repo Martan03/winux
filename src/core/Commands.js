@@ -72,11 +72,12 @@ function changeDir(cmd, args, env, setView) {
             output: `bash: cd: ${args[0]}: No such file or directory`,
         },
     ]);
-    return 2;
+    return 1;
 }
 
 function clear(setView) {
     setView([]);
+    return 0;
 }
 
 function help(cmd, setView) {
@@ -89,7 +90,8 @@ function help(cmd, setView) {
                 "Commands:\n" +
                 "    cd"
         }
-    ])
+    ]);
+    return 0;
 }
 
 function list(cmd, env, setView) {
@@ -101,6 +103,7 @@ function list(cmd, env, setView) {
         ...prev,
         { cmd: cmd, output: res },
     ]);
+    return 0;
 }
 
 function mkdir(cmd, args, env, setView) {
