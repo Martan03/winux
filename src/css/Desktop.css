@@ -378,14 +378,14 @@ h1 {
 }
 
 .term input {
-    width: 0;
+    width: 1;
+    opacity: none;
     height: 0;
     border: none;
     opacity: 0;
 }
 
 .term-cursor {
-    width: 0px;
     display: inline-block;
     position: relative;
 }
@@ -401,6 +401,7 @@ h1 {
 .term span,
 .term p {
     font-family: 'MonoPixelated';
-    white-space: pre;
+    white-space: pre-wrap;
+    word-break: break-all;
     line-height: 20px;
 }
