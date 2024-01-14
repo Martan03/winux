@@ -18,7 +18,7 @@ export function execute(input, env, setView) {
             help(prompt + cmd, setView);
             break;
         default:
-            executeProgram(cmd, args, prompt, env, setView);
+            executeProgram(cmd, args, prompt + input, env, setView);
             break;
     }
 }
@@ -28,13 +28,13 @@ function executeProgram(cmd, args, prompt, env, setView) {
     if (!file) {
         setView(prev => [
             ...prev,
-            prompt + cmd,
+            prompt,
             `bash: ${cmd}: command not found`,
         ]);
         return 1;
     }
 
-    setView(prev => [...prev, prompt + cmd]);
+    setView(prev => [...prev, prompt]);
     const execProgram = new Function(
         'env', 'args', 'setView',
         `${file.value}\nreturn main(env, args, setView);`
@@ -45,6 +45,7 @@ function executeProgram(cmd, args, prompt, env, setView) {
         setView(prev => [
             ...prev, `Error executing program '${cmd}'`,
         ]);
+        console.error(err);
         return 1;
     }
 }
@@ -56,7 +57,7 @@ function trueCommand(cmd, setView) {
     return 0;
 }
 
-function cat(env, args, setView) {
+const cat = `function main(env, args, setView) {
     if (args.length !== 1) {
         setView(prev => [
             ...prev, 'bash: cat: Invalid number of arguments'
@@ -73,10 +74,10 @@ function cat(env, args, setView) {
     }
 
     setView(prev => [
-        ...prev, `bash: cat: file '${args[0]}' doesn't exist`,
+        ...prev, \`bash: cat: file '\${args[0]}' doesn't exist\`,
     ]);
     return 1;
-}
+}`
 
 function changeDir(cmd, args, env, setView) {
     if (args.length <= 0)
@@ -94,10 +95,10 @@ function changeDir(cmd, args, env, setView) {
     return 1;
 }
 
-function clear(env, args, setView) {
+const clear = `function main(env, args, setView) {
     setView([]);
     return 0;
-}
+}`
 
 function echo(cmd, args, setView) {
     let output = '';
@@ -120,18 +121,18 @@ function help(cmd, setView) {
     return 0;
 }
 
-function list(env, args, setView) {
+const list = `function main(env, args, setView) {
     let res = '';
     for (let item in env.current.children) {
-        res += `${item} `;
+        res += \`\${item} \`;
     }
     setView(prev => [
         ...prev, res,
     ]);
     return 0;
-}
+}`
 
-function mkdir(env, args, setView) {
+const mkdir = `function main(env, args, setView) {
     if (args.length <= 0) {
         setView(prev => [
             ...prev, "mkdir: missing operand",
@@ -141,13 +142,13 @@ function mkdir(env, args, setView) {
 
     if (!env.fs.createDir(env.current, args[0])) {
         setView(prev => [
-            ...prev, `mkdir: cannot create directory '${args[0]}'`,
+            ...prev, \`mkdir: cannot create directory '\${args[0]}'\`,
         ]);
         return 1;
     }
 
     return 0;
-}
+}`
 
 export function getCommands(parent) {
     return {
@@ -161,11 +162,11 @@ export function getCommands(parent) {
         },
         ls: {
             name: 'ls', type: 'exe', parent,
-            value: list.toString().replace('list', 'main'),
+            value: list,
         },
         mkdir: {
             name: 'mkdir', type: 'exe', parent,
-            value: mkdir.toString().replace('mkdir', 'main'),
+            value: mkdir,
         },
     }
 }
