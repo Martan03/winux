@@ -21,28 +21,6 @@ export function execute(input, env, setView) {
             executeProgram(cmd, args, prompt, env, setView);
             break;
     }
-    /*
-    const file = env.fs.get(env.bin, cmd);
-    switch (file?.value) {
-        case "cat":
-            cat(prompt + input, args, env, setView);
-            break;
-        case "cd":
-            changeDir(prompt + input, args, env, setView);
-            break;
-        case "clear":
-            clear(setView);
-            break;
-        case "ls":
-            list(prompt + input, env, setView);
-            break;
-        case "mkdir":
-            mkdir(prompt + input, args, env, setView);
-            break;
-        default:
-            internal(cmd, args, prompt + input, env, setView);
-            break;
-    }*/
 }
 
 function executeProgram(cmd, args, prompt, env, setView) {
@@ -50,61 +28,38 @@ function executeProgram(cmd, args, prompt, env, setView) {
     if (!file) {
         setView(prev => [
             ...prev,
-            {
-                cmd: prompt,
-                output: `bash: ${cmd}: command not found`,
-            }
+            prompt + cmd,
+            `bash: ${cmd}: command not found`,
         ]);
         return 1;
     }
 
+    setView(prev => [...prev, prompt + cmd]);
+    const execProgram = new Function(
+        'env', 'args', 'setView',
+        `${file.value}\nreturn main(env, args, setView);`
+    );
     try {
-        const execProgram = new Function(
-            'env',
-            `${file.value}\nreturn main(env);`
-        );
-        return execProgram(env);
+        return execProgram(env, args, setView);
     } catch (err) {
-        console.error('Error');
-    }
-}
-
-function internal(cmd, args, prompt, env, setView) {
-    switch (cmd) {
-        case "cd":
-            changeDir(prompt, args, env, setView);
-            break;
-        case "echo":
-            echo(prompt, args, setView);
-            break;
-        case "help":
-            help(prompt, setView);
-            break;
-        default:
-            setView(prev => [
-                ...prev,
-                {
-                    cmd: prompt,
-                    output: `bash: ${cmd}: command not found`,
-                }
-            ]);
-            break;
+        setView(prev => [
+            ...prev, `Error executing program '${cmd}'`,
+        ]);
+        return 1;
     }
 }
 
 function trueCommand(cmd, setView) {
     setView(prev => [
-        ...prev,
-        { cmd: cmd }
+        ...prev, cmd,
     ]);
     return 0;
 }
 
-function cat(cmd, args, env, setView) {
+function cat(env, args, setView) {
     if (args.length !== 1) {
         setView(prev => [
-            ...prev,
-            { cmd, output: 'bash: cat: Invalid number of arguments' },
+            ...prev, 'bash: cat: Invalid number of arguments'
         ]);
         return 1;
     }
@@ -112,15 +67,13 @@ function cat(cmd, args, env, setView) {
     const file = env.fs.get(env.current, args[0]);
     if (file && !file.children) {
         setView(prev => [
-            ...prev,
-            { cmd, output: file.value },
+            ...prev, file.value
         ]);
         return 0;
     }
 
     setView(prev => [
-        ...prev,
-        { cmd, output: `bash: cat: file '${args[0]}' doesn't exist` },
+        ...prev, `bash: cat: file '${args[0]}' doesn't exist`,
     ]);
     return 1;
 }
@@ -136,16 +89,12 @@ function changeDir(cmd, args, env, setView) {
     }
 
     setView(prev => [
-        ...prev,
-        {
-            cmd: cmd,
-            output: `bash: cd: ${args[0]}: No such file or directory`,
-        },
+        ...prev, cmd, `bash: cd: ${args[0]}: No such file or directory`,
     ]);
     return 1;
 }
 
-function clear(setView) {
+function clear(env, args, setView) {
     setView([]);
     return 0;
 }
@@ -156,61 +105,67 @@ function echo(cmd, args, setView) {
         output = `${output}${arg} `;
     }
     setView(prev => [
-        ...prev,
-        { cmd, output }
+        ...prev, cmd, output,
     ]);
     return 0;
 }
 
 function help(cmd, setView) {
     setView(prev => [
-        ...prev,
-        {
-            cmd: cmd,
-            output:
-                "Welcome in winux by Martan03\n\n" +
-                "Commands:\n" +
-                "    cd"
-        }
+        ...prev, cmd,
+        "Welcome in winux by Martan03\n" +
+        "Commands:\n" +
+        "    cd",
     ]);
     return 0;
 }
 
-function list(cmd, env, setView) {
+function list(env, args, setView) {
     let res = '';
     for (let item in env.current.children) {
         res += `${item} `;
     }
     setView(prev => [
-        ...prev,
-        { cmd: cmd, output: res },
+        ...prev, res,
     ]);
     return 0;
 }
 
-function mkdir(cmd, args, env, setView) {
+function mkdir(env, args, setView) {
     if (args.length <= 0) {
         setView(prev => [
-            ...prev,
-            { cmd: cmd, output: "mkdir: missing operand" },
+            ...prev, "mkdir: missing operand",
         ]);
         return 1;
     }
 
     if (!env.fs.createDir(env.current, args[0])) {
         setView(prev => [
-            ...prev,
-            {
-                cmd: cmd,
-                output: `mkdir: cannot create directory '${args[0]}'`
-            },
+            ...prev, `mkdir: cannot create directory '${args[0]}'`,
         ]);
         return 1;
     }
 
-    setView(prev => [
-        ...prev,
-        { cmd: cmd },
-    ]);
     return 0;
+}
+
+export function getCommands(parent) {
+    return {
+        cat: {
+            name: 'cat', type: 'exe', parent,
+            value: cat.toString().replace('cat', 'main'),
+        },
+        clear: {
+            name: 'clear', type: 'exe', parent,
+            value: clear.toString().replace('clear', 'main'),
+        },
+        ls: {
+            name: 'ls', type: 'exe', parent,
+            value: list.toString().replace('list', 'main'),
+        },
+        mkdir: {
+            name: 'mkdir', type: 'exe', parent,
+            value: mkdir.toString().replace('mkdir', 'main'),
+        },
+    }
 }

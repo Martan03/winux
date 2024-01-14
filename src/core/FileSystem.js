@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getCommands } from "./Commands";
 
 const useFs = () => {
     const build = () => {
@@ -6,14 +7,7 @@ const useFs = () => {
         const usr = {name: 'usr', children: {}, parent: root};
 
         const bin = {name: 'bin', children: {}, parent: usr};
-        const cat = {name: 'cat', type: 'exe', value: 'cat', parent: bin};
-        const clear = {name: 'clear', type: 'exe', value: 'clear', parent: bin};
-        const ls = {name: 'ls', type: 'exe', value: 'function main(env) {console.log(env);}', parent: bin};
-        const mkdir = {name: 'mkdir', type: 'exe', value: 'mkdir', parent: bin};
-        bin.children.cat = cat;
-        bin.children.clear = clear;
-        bin.children.ls = ls;
-        bin.children.mkdir = mkdir;
+        bin.children = getCommands(bin);
 
         const home = {name: 'home', children: {}, parent: root};
         root.children.home = home;
