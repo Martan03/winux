@@ -154,11 +154,11 @@ export function getCommands(parent) {
     return {
         cat: {
             name: 'cat', type: 'exe', parent,
-            value: cat.toString().replace('cat', 'main'),
+            value: cat,
         },
         clear: {
             name: 'clear', type: 'exe', parent,
-            value: clear.toString().replace('clear', 'main'),
+            value: clear,
         },
         ls: {
             name: 'ls', type: 'exe', parent,
