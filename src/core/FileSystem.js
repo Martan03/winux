@@ -9,12 +9,17 @@ const useFs = () => {
         const bin = {name: 'bin', children: {}, parent: usr};
         bin.children = getCommands(bin);
 
+        const share = {name: 'share', children: {}, parent: usr};
+        const apps = {name: 'applications', children: {}, parent: share};
+        share.children = {applications: apps}
+
         const home = {name: 'home', children: {}, parent: root};
         root.children.home = home;
         const visitor = {name: 'visitor', children: {}, parent: home};
         home.children.visitor = visitor;
 
         usr.children.bin = bin;
+        usr.children.share = share;
         root.children.usr = usr;
 
         return root;
