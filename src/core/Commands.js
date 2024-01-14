@@ -7,6 +7,21 @@ export function execute(input, env, setView) {
         return;
     }
 
+    switch (cmd) {
+        case "cd":
+            changeDir(prompt + cmd, args, env, setView);
+            break;
+        case "echo":
+            echo(prompt + cmd, args, setView);
+            break;
+        case "help":
+            help(prompt + cmd, setView);
+            break;
+        default:
+            executeProgram(cmd, args, prompt, env, setView);
+            break;
+    }
+    /*
     const file = env.fs.get(env.bin, cmd);
     switch (file?.value) {
         case "cat":
@@ -27,6 +42,30 @@ export function execute(input, env, setView) {
         default:
             internal(cmd, args, prompt + input, env, setView);
             break;
+    }*/
+}
+
+function executeProgram(cmd, args, prompt, env, setView) {
+    const file = env.fs.get(env.bin, cmd);
+    if (!file) {
+        setView(prev => [
+            ...prev,
+            {
+                cmd: prompt,
+                output: `bash: ${cmd}: command not found`,
+            }
+        ]);
+        return 1;
+    }
+
+    try {
+        const execProgram = new Function(
+            'env',
+            `${file.value}\nreturn main(env);`
+        );
+        return execProgram(env);
+    } catch (err) {
+        console.error('Error');
     }
 }
 

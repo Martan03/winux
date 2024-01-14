@@ -8,7 +8,7 @@ const useFs = () => {
         const bin = {name: 'bin', children: {}, parent: usr};
         const cat = {name: 'cat', type: 'exe', value: 'cat', parent: bin};
         const clear = {name: 'clear', type: 'exe', value: 'clear', parent: bin};
-        const ls = {name: 'ls', type: 'exe', value: 'ls', parent: bin};
+        const ls = {name: 'ls', type: 'exe', value: 'function main(env) {console.log(env);}', parent: bin};
         const mkdir = {name: 'mkdir', type: 'exe', value: 'mkdir', parent: bin};
         bin.children.cat = cat;
         bin.children.clear = clear;
