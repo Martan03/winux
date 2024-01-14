@@ -9,13 +9,13 @@ export function execute(input, env, setView) {
 
     switch (cmd) {
         case "cd":
-            changeDir(prompt + cmd, args, env, setView);
+            changeDir(prompt + input, args, env, setView);
             break;
         case "echo":
-            echo(prompt + cmd, args, setView);
+            echo(prompt + input, args, setView);
             break;
         case "help":
-            help(prompt + cmd, setView);
+            help(prompt + input, setView);
             break;
         default:
             executeProgram(cmd, args, prompt + input, env, setView);
@@ -147,7 +147,7 @@ const mkdir = `function main(env, args, setView) {
         return 1;
     }
 
-    return 0;
+    return ;
 }`
 
 export function getCommands(parent) {
