@@ -54,7 +54,7 @@ const useFs = () => {
                 continue;
             }
 
-            current = get(current, part);
+            current = current?.children[part];
             if (!current || !current.children)
                 return null;
         }
@@ -68,19 +68,34 @@ const useFs = () => {
 
         let current = root;
         for (const part of newPath) {
-            current = get(current, part);
-            if (!current?.children)
+            current = current?.children[part];
+            if (!current || !current?.children)
                 return null;
         }
 
         return current;
     }
 
-    /// Gets parent child based on given name
-    const get = (parent, name) => {
-        if (!parent?.children[name])
-            return null;
-        return parent.children[name];
+    /// Gets file based on given path
+    const get = (dir, path) => {
+        const newPath = path.split('/').filter(part => part !== '');
+
+        let current = dir;
+        if (path.startsWith('/'))
+            current = root;
+
+        for (let i = 0; i < newPath.length - 1; i++) {
+            if (newPath[i] === '..') {
+                current = current.parent;
+                continue;
+            }
+
+            current = current?.children[newPath[i]];
+            if (!current || !current.children)
+                return null;
+        }
+
+        return current?.children[newPath[newPath.length - 1]];
     }
 
     /// Gets path of given item
