@@ -6,8 +6,8 @@ function Input({cmd, cursor}) {
     return (
         <>
             <span>{cmd.slice(0, cursor)}</span>
-            <div className="term-cursor"><div></div></div>
-            <span>{cmd.slice(cursor)}</span>
+            <span className="term-cursor">{cmd[cursor] ?? ' '}</span>
+            <span>{cmd.slice(cursor + 1)}</span>
         </>
     )
 }
