@@ -6,6 +6,7 @@ import { getDesktopApps } from './apps/Apps';
 import TaskBar from './components/TaskBar';
 import StartMenu from './components/StartMenu';
 import useFs from './core/FileSystem';
+import { ShutdownDialog } from './components/Dialog';
 
 function App() {
     const fs = useFs();
@@ -16,6 +17,8 @@ function App() {
     const [focus, setFocus] = useState(-1);
     const [lastId, setLastId] = useState(1);
     const apps = getDesktopApps();
+
+    const [dialog, setDialog] = useState(null);
 
     const addWindow = (app) => {
         setFocus(windows.length);
@@ -69,6 +72,8 @@ function App() {
                     fs={fs}
                 />
             ))}
+
+            <ShutdownDialog dialog={dialog} setDialog={setDialog} />
         </>
     )
 }
