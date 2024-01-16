@@ -51,45 +51,47 @@ function StartMenu({startVis, setStartVis, addWindow, setDialog}) {
     }
 
     return (
-        <div className="start-menu">
-            <div className="start-menu-header">
-                <p>Winux98</p>
-            </div>
-            <div className="start-menu-content">
-                <Item text="Programs" icon="programs.png" iconSm>
-                    <div className='start-menu-item-submenu'>
-                        {programs.map((item, key) => (
-                            <ItemSm
-                                key={key}
-                                item={item}
-                                addWindow={openWindow}
-                            />
-                        ))}
-                    </div>
-                </Item>
-                <Item text="Favourites" icon="favourites.png" iconSm>
-                    <div className="start-menu-item-submenu">
-                        {favs.map((item, key) => (
-                            <ItemSm
-                                key={key}
-                                item={item}
-                                addWindow={openWindow}
-                            />
-                        ))}
-                    </div>
-                </Item>
-                <Item text="Documents" icon="documents.png" iconSm />
-                <Item text="Settings" icon="settings.png" />
-                <Item text="Find" icon="search.png" />
-                <Item text="Help" icon="help.png" iconSm />
-                <Item text="Run..." icon="run.png" iconSm />
-                <div className="start-menu-sep"></div>
-                <Item text="Log Off..." icon="logout.png" />
-                <Item
-                    text="Shut Down..."
-                    icon="shutdown.png"
-                    onClick={onShutdown}
-                />
+        <div className='start-wrapper' onClick={() => setStartVis(false)}>
+            <div className="start-menu">
+                <div className="start-menu-header">
+                    <p>Winux98</p>
+                </div>
+                <div className="start-menu-content">
+                    <Item text="Programs" icon="programs.png" iconSm>
+                        <div className='start-menu-item-submenu'>
+                            {programs.map((item, key) => (
+                                <ItemSm
+                                    key={key}
+                                    item={item}
+                                    addWindow={openWindow}
+                                />
+                            ))}
+                        </div>
+                    </Item>
+                    <Item text="Favourites" icon="favourites.png" iconSm>
+                        <div className="start-menu-item-submenu">
+                            {favs.map((item, key) => (
+                                <ItemSm
+                                    key={key}
+                                    item={item}
+                                    addWindow={openWindow}
+                                />
+                            ))}
+                        </div>
+                    </Item>
+                    <Item text="Documents" icon="documents.png" iconSm />
+                    <Item text="Settings" icon="settings.png" />
+                    <Item text="Find" icon="search.png" />
+                    <Item text="Help" icon="help.png" iconSm />
+                    <Item text="Run..." icon="run.png" iconSm />
+                    <div className="start-menu-sep"></div>
+                    <Item text="Log Off..." icon="logout.png" />
+                    <Item
+                        text="Shut Down..."
+                        icon="shutdown.png"
+                        onClick={onShutdown}
+                    />
+                </div>
             </div>
         </div>
     )
