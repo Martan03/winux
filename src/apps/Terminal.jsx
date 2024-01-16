@@ -73,9 +73,7 @@ function Terminal({id, fs}) {
         <label htmlFor={`cmdInput${id}`}>
             <div className="term" ref={term}>
                 {view.map((item, key) => (
-                    <>
-                        <span key={key}>{item}</span><br/>
-                    </>
+                    <span key={key}>{item}</span>
                 ))}
                 <Prompt env={env} cmd={cmd} cursor={pos} />
                 <input

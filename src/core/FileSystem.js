@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getCommands } from "./Commands";
+import { getBinApps } from "../apps/Apps";
 
 const useFs = () => {
     const build = () => {
@@ -7,7 +8,10 @@ const useFs = () => {
         const usr = {name: 'usr', children: {}, parent: root};
 
         const bin = {name: 'bin', children: {}, parent: usr};
-        bin.children = getCommands(bin);
+        bin.children = {
+            ...getCommands(bin),
+            ...getBinApps(bin),
+        };
 
         const share = {name: 'share', children: {}, parent: usr};
         const apps = {name: 'applications', children: {}, parent: share};

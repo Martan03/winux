@@ -56,3 +56,14 @@ export function getFavourites() {
         },
     ];
 }
+
+export function getBinApps(parent) {
+    return {
+        notepad: {
+            name: 'notepad', type: 'app', parent, value: 'notepad'
+        },
+        terminal: {
+            name: 'terminal', type: 'app', parent, value: 'terminal',
+        }
+    }
+}

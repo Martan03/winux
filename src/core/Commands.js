@@ -2,8 +2,9 @@ export function execute(input, env, setView) {
     let [cmd, ...args] = input.split(' ').filter(word => word !== '');
     const prompt = `visitor@winux ${env.fs.getPath(env.current)}$ `;
 
+    setView(prev => [...prev, prompt + input + '\n']);
+
     if (!cmd) {
-        trueCommand(prompt, setView);
         return;
     }
 
@@ -18,23 +19,16 @@ export function execute(input, env, setView) {
             help(prompt + input, setView);
             break;
         default:
-            executeProgram(cmd, args, prompt + input, env, setView);
+            const file = env.fs.get(env.bin, cmd);
+            if (!file)
+                error(setView, `${cmd}: command not found`);
+            else if (file.type === 'exe')
+                executeProgram(file, cmd, args, env, setView);
             break;
     }
 }
 
-function executeProgram(cmd, args, prompt, env, setView) {
-    const file = env.fs.get(env.bin, cmd);
-    if (!file) {
-        setView(prev => [
-            ...prev,
-            prompt,
-            `bash: ${cmd}: command not found`,
-        ]);
-        return 1;
-    }
-
-    setView(prev => [...prev, prompt]);
+function executeProgram(file, cmd, args, env, setView) {
     const execProgram = new Function(
         'env', 'args', 'setView',
         `${file.value}\nreturn main(env, args, setView);`
@@ -43,24 +37,27 @@ function executeProgram(cmd, args, prompt, env, setView) {
         return execProgram(env, args, setView);
     } catch (err) {
         setView(prev => [
-            ...prev, `Error executing program '${cmd}'`,
+            ...prev, `Error executing program '${cmd}'\n`,
         ]);
         console.error(err);
         return 1;
     }
 }
 
-function trueCommand(cmd, setView) {
+function error(setView, err, ret = 1) {
     setView(prev => [
-        ...prev, cmd,
+        ...prev,
+        `bash: ${err}\n`
     ]);
-    return 0;
+    return ret;
 }
+
+
 
 const cat = `function main(env, args, setView) {
     if (args.length !== 1) {
         setView(prev => [
-            ...prev, 'bash: cat: Invalid number of arguments'
+            ...prev, 'bash: cat: Invalid number of arguments\\n'
         ]);
         return 1;
     }
@@ -68,31 +65,28 @@ const cat = `function main(env, args, setView) {
     const file = env.fs.get(env.current, args[0]);
     if (file && !file.children) {
         setView(prev => [
-            ...prev, file.value
+            ...prev, file.value + '\\n'
         ]);
         return 0;
     }
 
     setView(prev => [
-        ...prev, \`bash: cat: file '\${args[0]}' doesn't exist\`,
+        ...prev, \`bash: cat: file '\${args[0]}' doesn't exist\\n\`,
     ]);
     return 1;
 }`
 
 function changeDir(cmd, args, env, setView) {
     if (args.length <= 0)
-        return trueCommand(cmd, setView);
+        return 0;
 
     const current = env.fs.changeDir(env.current, args[0]);
     if (current) {
         env.current = current;
-        return trueCommand(cmd, setView);
+        return 0;
     }
 
-    setView(prev => [
-        ...prev, cmd, `bash: cd: ${args[0]}: No such file or directory`,
-    ]);
-    return 1;
+    return error(setView, `cd ${args[0]}: No such file or directory`);
 }
 
 const clear = `function main(env, args, setView) {
@@ -116,7 +110,7 @@ function help(cmd, setView) {
         ...prev, cmd,
         "Welcome in winux by Martan03\n" +
         "Commands:\n" +
-        "    cd",
+        "    cd\n",
     ]);
     return 0;
 }
@@ -127,7 +121,7 @@ const list = `function main(env, args, setView) {
         res += \`\${item} \`;
     }
     setView(prev => [
-        ...prev, res,
+        ...prev, res + '\\n',
     ]);
     return 0;
 }`
@@ -135,14 +129,14 @@ const list = `function main(env, args, setView) {
 const mkdir = `function main(env, args, setView) {
     if (args.length <= 0) {
         setView(prev => [
-            ...prev, "mkdir: missing operand",
+            ...prev, "mkdir: missing operand\\n",
         ]);
         return 1;
     }
 
     if (!env.fs.createDir(env.current, args[0])) {
         setView(prev => [
-            ...prev, \`mkdir: cannot create directory '\${args[0]}'\`,
+            ...prev, \`mkdir: cannot create directory '\${args[0]}'\\n\`,
         ]);
         return 1;
     }
