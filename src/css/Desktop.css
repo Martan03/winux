@@ -404,9 +404,40 @@ h1 {
     left: 0;
     display: flex;
     z-index: 99999;
+    background-color: #20202040;
 }
 
 .dialog .window {
     position: unset;
     margin: auto;
+    width: auto;
+    height: auto;
+}
+
+.shutdown {
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.shutdown img {
+    max-width: 60px;
+    max-height: 50px;
+    object-fit: contain;
+}
+
+.shutdown div {
+    padding-top: 10px;
+}
+
+.shutdown .buttons {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.shutdown .buttons > .btn {
+    width: 90px;
+    height: 25px;
+    font-size: 15px;
 }

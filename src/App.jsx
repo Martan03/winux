@@ -6,7 +6,7 @@ import { getDesktopApps } from './apps/Apps';
 import TaskBar from './components/TaskBar';
 import StartMenu from './components/StartMenu';
 import useFs from './core/FileSystem';
-import { ShutdownDialog } from './components/Dialog';
+import { Dialog } from './components/Dialog';
 
 function App() {
     const fs = useFs();
@@ -58,6 +58,7 @@ function App() {
                 startVis={startVis}
                 setStartVis={setStartVis}
                 addWindow={addWindow}
+                setDialog={setDialog}
             />
             {windows.map((win, key) => (
                 <Window
@@ -73,7 +74,7 @@ function App() {
                 />
             ))}
 
-            <ShutdownDialog dialog={dialog} setDialog={setDialog} />
+            <Dialog dialog={dialog} setDialog={setDialog} />
         </>
     )
 }

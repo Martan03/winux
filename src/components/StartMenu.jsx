@@ -1,9 +1,9 @@
 import { getFavourites, getPrograms } from '../apps/Apps';
 import Arrow from '../assets/arrow.svg';
 
-function Item({text, icon, iconSm, children}) {
+function Item({text, icon, onClick, iconSm, children}) {
     return (
-        <div className="start-menu-item">
+        <div className="start-menu-item" onClick={onClick}>
             <img
                 className={`icon${iconSm ? ' sm': ''}`}
                 src={'./icons/' + icon}
@@ -33,7 +33,7 @@ function ItemSm({item, addWindow, iconSm, children}) {
     )
 }
 
-function StartMenu({startVis, setStartVis, addWindow}) {
+function StartMenu({startVis, setStartVis, addWindow, setDialog}) {
     if (!startVis)
         return;
 
@@ -43,6 +43,11 @@ function StartMenu({startVis, setStartVis, addWindow}) {
     const openWindow = (app) => {
         setStartVis(false);
         addWindow(app);
+    }
+
+    const onShutdown = () => {
+        setStartVis(false);
+        setDialog('shutdown');
     }
 
     return (
@@ -80,7 +85,11 @@ function StartMenu({startVis, setStartVis, addWindow}) {
                 <Item text="Run..." icon="run.png" iconSm />
                 <div className="start-menu-sep"></div>
                 <Item text="Log Off..." icon="logout.png" />
-                <Item text="Shut Down..." icon="shutdown.png" />
+                <Item
+                    text="Shut Down..."
+                    icon="shutdown.png"
+                    onClick={onShutdown}
+                />
             </div>
         </div>
     )
