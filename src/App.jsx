@@ -9,6 +9,8 @@ import useFs from './core/FileSystem';
 import { Dialog } from './components/Dialog';
 
 function App() {
+    const [on, setOn] = useState(true);
+
     const fs = useFs();
 
     const [startVis, setStartVis] = useState(false);
@@ -43,6 +45,10 @@ function App() {
         setWindows(newWindows);
     }
 
+    if (!on) {
+        return <div className='turned-off'>how can I turn it on?</div>
+    }
+
     return (
         <>
             <Grid apps={apps} open={addWindow} />
@@ -74,7 +80,7 @@ function App() {
                 />
             ))}
 
-            <Dialog dialog={dialog} setDialog={setDialog} />
+            <Dialog dialog={dialog} setDialog={setDialog} setOn={setOn} />
         </>
     )
 }

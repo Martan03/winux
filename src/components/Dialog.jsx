@@ -18,9 +18,9 @@ export function WindowDialog({title, onClose, children}) {
     );
 }
 
-export function ShutdownDialog({onClose}) {
+export function ShutdownDialog({onClose, setOn}) {
     const onShutdown = () => {
-        window.close();
+        setOn(false);
     }
 
     return (
@@ -43,13 +43,13 @@ export function ShutdownDialog({onClose}) {
     )
 }
 
-export function Dialog({dialog, setDialog}) {
+export function Dialog({dialog, setDialog, setOn}) {
     const onClose = () => {
         setDialog(null);
     }
 
     if (dialog === 'shutdown') {
-        return <ShutdownDialog onClose={onClose} />
+        return <ShutdownDialog onClose={onClose} setOn={setOn} />
     }
 
     return <></>
