@@ -7,43 +7,18 @@ import TaskBar from './components/TaskBar';
 import StartMenu from './components/StartMenu';
 import useFs from './core/FileSystem';
 import { Dialog } from './components/Dialog';
+import useWindowManager from './core/WindowManager';
 
 function App() {
     const [on, setOn] = useState(true);
+    const [dialog, setDialog] = useState(null);
 
     const fs = useFs();
+    const wm = useWindowManager();
 
     const [startVis, setStartVis] = useState(false);
 
-    const [windows, setWindows] = useState([]);
-    const [focus, setFocus] = useState(-1);
-    const [lastId, setLastId] = useState(1);
     const apps = getDesktopApps();
-
-    const [dialog, setDialog] = useState(null);
-
-    const addWindow = (app) => {
-        setFocus(windows.length);
-        setWindows([
-            ...windows,
-            {
-                id: lastId,
-                minimized: false,
-                pos: {
-                    x: -1000, y: -1000
-                },
-                zIndex: lastId,
-                app: app,
-            }
-        ]);
-        setLastId(lastId + 1);
-    }
-
-    const editWindow = (id, win) => {
-        var newWindows = [...windows];
-        newWindows[id] = win;
-        setWindows(newWindows);
-    }
 
     if (!on) {
         return <div className='turned-off'>how can I turn it on?</div>
@@ -51,32 +26,32 @@ function App() {
 
     return (
         <>
-            <Grid apps={apps} open={addWindow} />
+            <Grid apps={apps} open={wm.add} />
             <TaskBar
-                windows={windows}
-                setWindows={setWindows}
-                focus={focus}
-                setFocus={setFocus}
+                windows={wm.windows}
+                setWindows={wm.setWindows}
+                focus={wm.focus}
+                setFocus={wm.setFocus}
                 startVis={startVis}
                 setStartVis={setStartVis}
             />
             <StartMenu
                 startVis={startVis}
                 setStartVis={setStartVis}
-                addWindow={addWindow}
+                addWindow={wm.add}
                 setDialog={setDialog}
             />
-            {windows.map((win, key) => (
+            {wm.windows.map((win, key) => (
                 <Window
                     key={win.id}
                     id={key}
                     win={win}
-                    windows={windows}
-                    setWindows={setWindows}
-                    focus={focus}
-                    setFocus={setFocus}
-                    editWindow={editWindow}
+                    windows={wm.windows}
+                    setWindows={wm.setWindows}
+                    focus={wm.focus}
+                    setFocus={wm.setFocus}
                     fs={fs}
+                    wm={wm}
                 />
             ))}
 

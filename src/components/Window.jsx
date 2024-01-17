@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import Notepad from "../apps/Notepad";
 
 /// Renders window bar
-function WindowBar({id, win, windows, setWindows, focus, setFocus}) {
+function WindowBar({id, win, windows, setWindows, focus, setFocus, wm}) {
     const [isDrag, setIsDrag] = useState(false);
     const [startPos, setStartPos] = useState({x: 0, y: 0});
 
@@ -61,49 +61,12 @@ function WindowBar({id, win, windows, setWindows, focus, setFocus}) {
 
     const onMinimize = (e) => {
         e.stopPropagation();
-
-        var updated = [...windows];
-        updated[id].minimized = true;
-        setWindows(updated);
-
-        if (id !== focus)
-            return;
-
-        let max = -1;
-        for (let i = 0; i < updated.length; i++) {
-            if (updated[i].minimized)
-                continue;
-
-            if (updated[max]?.zIndex ?? 0 < updated[i].zIndex) {
-                max = i;
-            }
-        }
-        setFocus(max);
+        wm.minimize(id);
     }
 
     const onClose = (e) => {
         e.stopPropagation();
-
-        var updated = [...windows];
-        updated.splice(id, 1);
-        setWindows(updated);
-
-        if (id !== focus || updated.length <= 0) {
-            if (id < focus)
-                setFocus(focus - 1);
-            return;
-        }
-
-        let max = -1;
-        for (let i = 0; i < updated.length; i++) {
-            if (updated[i].minimized)
-                continue;
-
-            if (updated[max]?.zIndex ?? 0 < updated[i].zIndex) {
-                max = i;
-            }
-        }
-        setFocus(max);
+        wm.close(id);
     }
 
     return (
@@ -141,37 +104,15 @@ function ExtApp({url}) {
 
 /// Renders window
 function Window({
-    id, win, windows, setWindows, focus, setFocus, editWindow, fs
+    id, win, windows, setWindows, focus, setFocus, fs, wm
 }) {
-    // Centers window
-    useEffect(() => {
-        const initialX = Math.max((window.innerWidth - 720) / 2, 0);
-        const initialY = Math.max((window.innerHeight - 500) / 2, 0);
-        win.pos = { x: initialX, y: initialY };
-        setWindow(win);
-    }, []);
-
     if (win.minimized)
         return;
-
-    const setWindow = (editWin) => {
-        editWindow(id, editWin);
-    }
-
-    const onFocus = () => {
-        if (id == focus)
-            return;
-
-        var win = [...windows];
-        win[id].zIndex = win[focus] ? win[focus].zIndex + 1 : 1;
-        setWindows(win);
-        setFocus(id);
-    }
 
     return (
         <div
             className="window"
-            onMouseDown={onFocus}
+            onMouseDown={() => wm.changeFocus(id)}
             style={{top: win.pos.y, left: win.pos.x, zIndex: win.zIndex}}
         >
             <WindowBar
@@ -181,6 +122,7 @@ function Window({
                 setWindows={setWindows}
                 focus={focus}
                 setFocus={setFocus}
+                wm={wm}
             />
             <div className="window-content">
                 {win.app.url ? (

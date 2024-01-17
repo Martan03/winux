@@ -52,7 +52,7 @@ function StartMenu({startVis, setStartVis, addWindow, setDialog}) {
 
     return (
         <div className='start-wrapper' onClick={() => setStartVis(false)}>
-            <div className="start-menu">
+            <div className="start-menu" onClick={e => e.stopPropagation()}>
                 <div className="start-menu-header">
                     <p>Winux98</p>
                 </div>
