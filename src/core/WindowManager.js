@@ -57,6 +57,15 @@ const useWindowManager = () => {
         setFocus(max);
     }
 
+    const unminimize = (id) => {
+        var updated = [...windows];
+        updated[id].zIndex = updated[focus] ? updated[focus].zIndex + 1 : 1;
+        updated[id].minimized = false;
+
+        setWindows(updated);
+        setFocus(id);
+    }
+
     /// Closes window
     const close = (id) => {
         var updated = [...windows];
@@ -81,8 +90,15 @@ const useWindowManager = () => {
         setFocus(max);
     }
 
+    const move = (id, pos) => {
+        var updated = [...windows];
+        updated[id].pos = pos;
+        setWindows(updated);
+    }
+
     return {
-        windows, setWindows, focus, setFocus, add, changeFocus, minimize, close
+        windows, setWindows, focus, setFocus, add,
+        changeFocus, minimize, unminimize, close, move,
     }
 }
 

@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import Notepad from "../apps/Notepad";
 
 /// Renders window bar
-function WindowBar({id, win, windows, setWindows, focus, setFocus, wm}) {
+function WindowBar({id, win, wm}) {
     const [isDrag, setIsDrag] = useState(false);
     const [startPos, setStartPos] = useState({x: 0, y: 0});
 
@@ -51,12 +51,7 @@ function WindowBar({id, win, windows, setWindows, focus, setFocus, wm}) {
     };
 
     const changePos = (pos) => {
-        var updated = [...windows];
-        updated[id] = {
-            ...updated[id],
-            pos: pos,
-        };
-        setWindows(updated);
+        wm.move(id, pos);
     }
 
     const onMinimize = (e) => {
@@ -71,7 +66,7 @@ function WindowBar({id, win, windows, setWindows, focus, setFocus, wm}) {
 
     return (
         <div
-            className={'window-bar' + (focus === id ? ' focus' : '')}
+            className={'window-bar' + (wm.focus === id ? ' focus' : '')}
             onMouseDown={handleMouseDown}
         >
             <div>
@@ -104,7 +99,7 @@ function ExtApp({url}) {
 
 /// Renders window
 function Window({
-    id, win, windows, setWindows, focus, setFocus, fs, wm
+    id, win, fs, wm
 }) {
     if (win.minimized)
         return;
@@ -115,15 +110,7 @@ function Window({
             onMouseDown={() => wm.changeFocus(id)}
             style={{top: win.pos.y, left: win.pos.x, zIndex: win.zIndex}}
         >
-            <WindowBar
-                id={id}
-                win={win}
-                windows={windows}
-                setWindows={setWindows}
-                focus={focus}
-                setFocus={setFocus}
-                wm={wm}
-            />
+            <WindowBar id={id} win={win} wm={wm} />
             <div className="window-content">
                 {win.app.url ? (
                     <ExtApp url={win.app.url} />

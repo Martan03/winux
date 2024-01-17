@@ -27,14 +27,7 @@ function App() {
     return (
         <>
             <Grid apps={apps} open={wm.add} />
-            <TaskBar
-                windows={wm.windows}
-                setWindows={wm.setWindows}
-                focus={wm.focus}
-                setFocus={wm.setFocus}
-                startVis={startVis}
-                setStartVis={setStartVis}
-            />
+            <TaskBar wm={wm} startVis={startVis} setStartVis={setStartVis} />
             <StartMenu
                 startVis={startVis}
                 setStartVis={setStartVis}
@@ -42,17 +35,7 @@ function App() {
                 setDialog={setDialog}
             />
             {wm.windows.map((win, key) => (
-                <Window
-                    key={win.id}
-                    id={key}
-                    win={win}
-                    windows={wm.windows}
-                    setWindows={wm.setWindows}
-                    focus={wm.focus}
-                    setFocus={wm.setFocus}
-                    fs={fs}
-                    wm={wm}
-                />
+                <Window key={win.id} id={key} win={win} fs={fs} wm={wm} />
             ))}
 
             <Dialog dialog={dialog} setDialog={setDialog} setOn={setOn} />

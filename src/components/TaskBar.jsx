@@ -13,49 +13,20 @@ function StartButton({startVis, setStartVis}) {
 }
 
 /// Renders opened apps
-function OpenedApps({windows, setWindows, focus, setFocus}) {
+function OpenedApps({wm}) {
     const onClick = (id) => {
-        if (windows[id].minimized)
-            maximize(id);
+        if (wm.windows[id].minimized)
+            wm.unminimize(id);
         else
-            minimize(id);
-    }
-
-    const maximize = (id) => {
-        var updated = [...windows];
-        updated[id].zIndex = updated[focus] ? updated[focus].zIndex + 1 : 1;
-        updated[id].minimized = false;
-
-        setWindows(updated);
-        setFocus(id);
-    }
-
-    const minimize = (id) => {
-        var updated = [...windows];
-        updated[id].minimized = true;
-        setWindows(updated);
-
-        if (id !== focus)
-            return;
-
-        let max = -1;
-        for (let i = 0; i < updated.length; i++) {
-            if (updated[i].minimized)
-                continue;
-
-            if (updated[max]?.zIndex ?? 0 < updated[i].zIndex) {
-                max = i;
-            }
-        }
-        setFocus(max);
+            wm.minimize(id);
     }
 
     return (
         <div className="taskbar-open-apps">
-            {windows.map((win, key) => (
+            {wm.windows.map((win, key) => (
                 <div
                     key={key}
-                    className={'btn' + (focus === key ? ' focus' : '')}
+                    className={'btn' + (wm.focus === key ? ' focus' : '')}
                     onClick={() => onClick(key)}
                 >
                     <img src={win.app.icon} />
@@ -101,18 +72,13 @@ function Tray() {
 }
 
 function TaskBar({
-    windows, setWindows, focus, setFocus, startVis, setStartVis
+    wm, startVis, setStartVis
 }) {
     return (
         <div className="taskbar">
             <StartButton startVis={startVis} setStartVis={setStartVis} />
             <div className="taskbar-divider"></div>
-            <OpenedApps
-                windows={windows}
-                setWindows={setWindows}
-                focus={focus}
-                setFocus={setFocus}
-            />
+            <OpenedApps wm={wm} />
             <div className="taskbar-divider"></div>
             <Tray />
         </div>
