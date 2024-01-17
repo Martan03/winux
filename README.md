@@ -21,6 +21,11 @@ npm run dev
 
 ## Detailed description
 
+This is how it looks like:
+
+![image](https://github.com/Martan03/winux/assets/46300167/f72e0864-ae1c-43df-9c45-09031052364b)
+
+
 This website contains replica of **Windows 98**, which I find very nice
 looking + it's nostalgic. But to be fair, I don't really know Windows terminal,
 because I use Linux *(I use Arch btw)*, so to make things easier, terminal is
