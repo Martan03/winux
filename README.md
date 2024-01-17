@@ -47,5 +47,5 @@ and it made my life so much easier, so thanks!
 ## Links
 
 - **Author:** [Martan03](https://github.com/Martan03)
-- **GitHub repository:** [bump](https://github.com/Martan03/desk-site)
+- **GitHub repository:** [winux](https://github.com/Martan03/desk-site)
 - **Author website:** [martan03.github.io](https://martan03.github.io)
