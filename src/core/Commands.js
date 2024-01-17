@@ -141,7 +141,7 @@ const mkdir = `function main(env, args, setView) {
         return 1;
     }
 
-    return ;
+    return 0;
 }`
 
 export function getCommands(parent) {

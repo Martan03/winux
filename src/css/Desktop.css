@@ -399,6 +399,10 @@ h1 {
     border-bottom: 2px solid white;
 }
 
+.term-cursor.select {
+    background-color: #50505050;
+}
+
 .term span {
     font-family: 'MonoPixelated';
     white-space: pre-wrap;
