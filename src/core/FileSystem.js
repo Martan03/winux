@@ -50,6 +50,8 @@ const useFs = () => {
 
     /// Returns directory based on given path
     const changeDir = (dir, path) => {
+        if (path.startsWith('~'))
+            path = path.replace('~', '/home/visitor');
         const newPath = path.split('/').filter(part => part !== '');
 
         let current = dir;
@@ -86,6 +88,8 @@ const useFs = () => {
 
     /// Gets file based on given path
     const get = (dir, path) => {
+        if (path.startsWith('~'))
+            path = path.replace('~', '/home/visitor');
         const newPath = path.split('/').filter(part => part !== '');
 
         let current = dir;

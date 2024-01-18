@@ -138,13 +138,13 @@ const list = `function main(env, args, setView) {
         const dir = env.fs.get(env.current, arg ?? '');
         if (!dir || !dir.children) {
             setView(prev => [
-                ...prev, ``bash: ls: directory '\${arg}' not found\\n\`,
+                ...prev, \`bash: ls: directory '\${arg}' not found\\n\`,
             ]);
             ret = 1;
             continue;
         }
 
-        let res = args.length ? \`\${arg}:\\n\` : '';
+        let res = args.length > 1 ? \`\${arg}:\\n\` : '';
         for (let item in dir.children) {
             res += \`\${item} \`;
         }
