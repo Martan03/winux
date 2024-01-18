@@ -30,7 +30,7 @@ function OpenedApps({wm}) {
                     onClick={() => onClick(key)}
                 >
                     <img src={win.app.icon} />
-                    <p>{win.app.title}</p>
+                    <p>{win.app.name}</p>
                 </div>
             ))}
         </div>

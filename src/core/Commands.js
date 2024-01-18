@@ -1,4 +1,4 @@
-export function execute(input, env, setView) {
+export function execute(input, env, wm, setView) {
     let [cmd, ...args] = input.split(' ').filter(word => word !== '');
     const prompt = `visitor@winux ${env.fs.getPath(env.current)}$ `;
 
@@ -24,6 +24,10 @@ export function execute(input, env, setView) {
                 error(setView, `${cmd}: command not found`);
             else if (file.type === 'exe')
                 executeProgram(file, cmd, args, env, setView);
+            else if (file.type === 'app')
+                openApp(file, wm);
+
+            error(setView, `${cmd}: file not executable`)
             break;
     }
 }
@@ -42,6 +46,10 @@ function executeProgram(file, cmd, args, env, setView) {
         console.error(err);
         return 1;
     }
+}
+
+function openApp(file, wm) {
+    wm.add(file);
 }
 
 function error(setView, err, ret = 1) {

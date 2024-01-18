@@ -41,7 +41,7 @@ const useWindowManager = () => {
                 pos: { x, y },
                 zIndex,
                 app: {
-                    title: file.Name,
+                    name: file.Name,
                     icon: file.Icon,
                     exec: file.Exec,
                 },

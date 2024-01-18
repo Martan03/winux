@@ -21,7 +21,7 @@ export function getPrograms(parent) {
 export function getFavourites() {
     return [
         {
-            title: 'My Portfolio',
+            name: 'My Portfolio',
             icon: './icons/internet-explorer.png',
             url: 'https://martan03.github.io',
         },

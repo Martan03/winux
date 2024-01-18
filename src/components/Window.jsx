@@ -70,7 +70,7 @@ function WindowBar({id, win, wm}) {
             onMouseDown={handleMouseDown}
         >
             <div>
-                <p>{win.app.title}</p>
+                <p>{win.app.name}</p>
             </div>
             <div>
                 <button className="btn" onMouseDown={onMinimize}>_</button>
@@ -81,13 +81,13 @@ function WindowBar({id, win, wm}) {
 }
 
 /// Renders build in app by its title
-function BuildInApp({id, win, fs}) {
-    const name = win.app.exec ? win.app.exec : win.app.title;
+function BuildInApp({id, win, fs, wm}) {
+    const name = win.app.exec ? win.app.exec : win.app.name.toLowerCase();
     switch (name) {
-        case 'Terminal':
+        case 'terminal':
         case '/usr/bin/terminal':
-            return <Terminal id={id} fs={fs} />
-        case 'Notepad':
+            return <Terminal id={id} fs={fs} wm={wm} />
+        case 'notepad':
         case '/usr/bin/notepad':
             return <Notepad />
         default:
@@ -122,6 +122,7 @@ function Window({
                         id={id}
                         win={win}
                         fs={fs}
+                        wm={wm}
                     />
                 )}
             </div>

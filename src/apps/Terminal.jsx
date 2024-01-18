@@ -21,7 +21,7 @@ function Prompt({env, cmd, cursor}) {
     )
 }
 
-function Terminal({id, fs}) {
+function Terminal({id, fs, wm}) {
     const [env, setEnv] = useState(new Environment(fs));
 
     const [cmd, setCmd] = useState('');
@@ -59,7 +59,7 @@ function Terminal({id, fs}) {
         } else if (e.key === 'Home') {
             setPos(0);
         } else if (e.key === 'Enter') {
-            execute(cmd, env, setView);
+            execute(cmd, env, wm, setView);
             setHistoryId(-1);
             setHistory(prev => [
                 cmd,
