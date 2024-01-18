@@ -1,14 +1,18 @@
+import { getAppsFromDir } from "../core/Apps";
 import Icon from "./Icon";
 
 /// Renders grid of icons
-function Grid({apps, open}) {
+function Grid({fs, wm}) {
+    const desktop = fs.find('/home/visitor/Desktop');
+    const apps = getAppsFromDir(desktop);
+
     return (
         <div className="grid">
             {apps.map((app, id) => (
                 <Icon
                     key={id}
                     app={app}
-                    open={open}
+                    wm={wm}
                 />
             ))}
         </div>

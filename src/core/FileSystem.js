@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { getCommands } from "./Commands";
-import { getBinApps } from "../apps/Apps";
+import { getBinApps, getDesktop, getDesktopApps, getPrograms } from "../core/Apps";
 
 const useFs = () => {
     const build = () => {
@@ -16,11 +16,16 @@ const useFs = () => {
         const share = {name: 'share', children: {}, parent: usr};
         const apps = {name: 'applications', children: {}, parent: share};
         share.children = {applications: apps}
+        apps.children = getPrograms(apps);
 
         const home = {name: 'home', children: {}, parent: root};
         root.children.home = home;
         const visitor = {name: 'visitor', children: {}, parent: home};
         home.children.visitor = visitor;
+        const desktop = {
+            name: 'Desktop', children: getDesktop(visitor), parent: visitor
+        };
+        visitor.children.Desktop = desktop;
 
         usr.children.bin = bin;
         usr.children.share = share;

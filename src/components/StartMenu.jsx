@@ -1,4 +1,4 @@
-import { getFavourites, getPrograms } from '../apps/Apps';
+import { getAppsFromDir, getFavourites, getPrograms } from '../core/Apps';
 import Arrow from '../assets/arrow.svg';
 
 function Item({text, icon, onClick, iconSm, children}) {
@@ -17,14 +17,26 @@ function Item({text, icon, onClick, iconSm, children}) {
     )
 }
 
-function ItemSm({item, addWindow, iconSm, children}) {
+function ItemSm({item, wm, close, iconSm, children}) {
+    const icon = item.Icon ?? item.icon ?? '';
+    const name = item.Name ?? item.title ?? '';
+
+    const open = () => {
+        close();
+        if (item.Exec) {
+            wm.addFromFile(item);
+        } else {
+            wm.add(item);
+        }
+    }
+
     return (
-        <div className="start-menu-item sm" onClick={() => addWindow(item)}>
+        <div className="start-menu-item sm" onClick={open}>
             <img
                 className={`icon${iconSm ? ' sm': ''}`}
-                src={item.icon}
+                src={icon}
             />
-            <p>{item.title}</p>
+            <p>{name}</p>
             {children ? <>
                 <img className='menu-arrow' src={Arrow}/>
                 {children}
@@ -33,11 +45,13 @@ function ItemSm({item, addWindow, iconSm, children}) {
     )
 }
 
-function StartMenu({startVis, setStartVis, addWindow, setDialog}) {
+function StartMenu({startVis, setStartVis, addWindow, setDialog, fs, wm}) {
     if (!startVis)
         return;
 
-    const programs = getPrograms();
+    const apps = fs.get(fs.root, '/usr/share/applications');
+    const programs = getAppsFromDir(apps);
+
     const favs = getFavourites();
 
     const openWindow = (app) => {
@@ -63,7 +77,8 @@ function StartMenu({startVis, setStartVis, addWindow, setDialog}) {
                                 <ItemSm
                                     key={key}
                                     item={item}
-                                    addWindow={openWindow}
+                                    wm={wm}
+                                    close={() => setStartVis(false)}
                                 />
                             ))}
                         </div>
@@ -74,7 +89,8 @@ function StartMenu({startVis, setStartVis, addWindow, setDialog}) {
                                 <ItemSm
                                     key={key}
                                     item={item}
-                                    addWindow={openWindow}
+                                    wm={wm}
+                                    close={() => setStartVis(false)}
                                 />
                             ))}
                         </div>

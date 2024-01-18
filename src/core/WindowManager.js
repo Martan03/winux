@@ -26,6 +26,30 @@ const useWindowManager = () => {
         setLastId(lastId + 1);
     }
 
+    /// Opens given file in window
+    const addFromFile = (file) => {
+        const x = Math.max((window.innerWidth - 720) / 2, 0);
+        const y = Math.max((window.innerHeight - 500) / 2, 0);
+        const zIndex = windows[focus] ? windows[focus].zIndex + 1 : 1;
+
+        setFocus(windows.length);
+        setWindows([
+            ...windows,
+            {
+                id: lastId,
+                minimized: false,
+                pos: { x, y },
+                zIndex,
+                app: {
+                    title: file.Name,
+                    icon: file.Icon,
+                    exec: file.Exec,
+                },
+            }
+        ]);
+        setLastId(lastId + 1);
+    }
+
     /// Changes focus to given id
     const changeFocus = (id) => {
         if (id == focus)
@@ -93,7 +117,7 @@ const useWindowManager = () => {
     }
 
     return {
-        windows, setWindows, focus, setFocus, add,
+        windows, setWindows, focus, setFocus, add, addFromFile,
         changeFocus, minimize, unminimize, close, move,
     }
 }

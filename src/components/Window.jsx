@@ -81,11 +81,13 @@ function WindowBar({id, win, wm}) {
 }
 
 /// Renders build in app by its title
-function BuildInApp({id, title, fs}) {
-    switch (title) {
+function BuildInApp({id, win, fs}) {
+    const name = win.app.exec ? win.app.exec : win.app.title;
+    switch (name) {
         case 'Terminal':
+        case '/usr/bin/terminal':
             return <Terminal id={id} fs={fs} />
-        case 'Notepad':
+        case 'Notepad' || '/usr/bin/notepad':
             return <Notepad />
         default:
             return <p>App failed to load</p>
@@ -117,7 +119,7 @@ function Window({
                 ) : (
                     <BuildInApp
                         id={id}
-                        title={win.app.title}
+                        win={win}
                         fs={fs}
                     />
                 )}

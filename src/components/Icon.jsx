@@ -1,9 +1,13 @@
 /// Renders desktop icon
-function Icon({app, open}) {
+function Icon({app, wm}) {
+    const open = () => {
+        wm.addFromFile(app);
+    }
+
     return (
         <div className="icon" onDoubleClick={() => open(app)}>
-            <img src={app.icon} alt={app.title + " icon"} />
-            <p>{app.title}</p>
+            <img src={app.Icon} alt={app.Name + " icon"} />
+            <p>{app.Name}</p>
         </div>
     );
 }

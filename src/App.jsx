@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import './css/App.css'
 import Grid from './components/Grid';
 import Window from './components/Window';
-import { getDesktopApps } from './apps/Apps';
+import { getDesktopApps } from './core/Apps';
 import TaskBar from './components/TaskBar';
 import StartMenu from './components/StartMenu';
 import useFs from './core/FileSystem';
@@ -26,13 +26,15 @@ function App() {
 
     return (
         <>
-            <Grid apps={apps} open={wm.add} />
+            <Grid fs={fs} wm={wm} />
             <TaskBar wm={wm} startVis={startVis} setStartVis={setStartVis} />
             <StartMenu
                 startVis={startVis}
                 setStartVis={setStartVis}
                 addWindow={wm.add}
                 setDialog={setDialog}
+                fs={fs}
+                wm={wm}
             />
             {wm.windows.map((win, key) => (
                 <Window key={win.id} id={key} win={win} fs={fs} wm={wm} />
