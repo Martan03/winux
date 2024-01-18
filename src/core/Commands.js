@@ -26,8 +26,8 @@ export function execute(input, env, wm, setView) {
                 executeProgram(file, cmd, args, env, setView);
             else if (file.type === 'app')
                 openApp(file, wm);
-
-            error(setView, `${cmd}: file not executable`)
+            else
+                error(setView, `${cmd}: file not executable`)
             break;
     }
 }
@@ -131,22 +131,28 @@ Commands:
 }
 
 const list = `function main(env, args, setView) {
-    const dir = env.fs.get(env.current, args[0] ?? '');
-    if (!dir || !dir.children) {
-        setView(prev => [
-            ...prev, \`bash: ls: directory '\${args[0]}' not found\\n\`,
-        ]);
-        return 1;
-    }
+    let ret = 0;
+    if (args.length <= 0)
+        args.push('');
+    for (const arg of args) {
+        const dir = env.fs.get(env.current, arg ?? '');
+        if (!dir || !dir.children) {
+            setView(prev => [
+                ...prev, ``bash: ls: directory '\${arg}' not found\\n\`,
+            ]);
+            ret = 1;
+            continue;
+        }
 
-    let res = '';
-    for (let item in dir.children) {
-        res += \`\${item} \`;
+        let res = args.length ? \`${arg}:\\n\` : '';
+        for (let item in dir.children) {
+            res += \`\${item} \`;
+        }
+        setView(prev => [
+            ...prev, res + '\\n',
+        ]);
     }
-    setView(prev => [
-        ...prev, res + '\\n',
-    ]);
-    return 0;
+    return ret;
 }`
 
 const mkdir = `function main(env, args, setView) {
