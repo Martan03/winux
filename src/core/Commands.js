@@ -149,11 +149,14 @@ const mkdir = `function main(env, args, setView) {
         return 1;
     }
 
-    if (!env.fs.createDir(env.current, args[0])) {
-        setView(prev => [
-            ...prev, \`mkdir: cannot create directory '\${args[0]}'\\n\`,
-        ]);
-        return 1;
+    let ret = 0;
+    for (const arg of args) {
+        if (!env.fs.createDir(env.current, arg)) {
+            setView(prev => [
+                ...prev, \`mkdir: cannot create directory '\${arg}'\\n\`,
+            ]);
+            ret = 1;
+        }
     }
 
     return 0;
