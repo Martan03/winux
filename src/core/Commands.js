@@ -82,7 +82,7 @@ const cat = `function main(env, args, setView) {
         ...prev, \`bash: cat: file '\${args[0]}' doesn't exist\\n\`,
     ]);
     return 1;
-}`
+}`;
 
 function changeDir(args, env, setView) {
     if (args.length <= 0)
@@ -100,7 +100,7 @@ function changeDir(args, env, setView) {
 const clear = `function main(env, args, setView) {
     setView([]);
     return 0;
-}`
+}`;
 
 function echo(args, setView) {
     let output = '';
@@ -153,7 +153,7 @@ const list = `function main(env, args, setView) {
         ]);
     }
     return ret;
-}`
+}`;
 
 const mkdir = `function main(env, args, setView) {
     if (args.length <= 0) {
@@ -174,25 +174,32 @@ const mkdir = `function main(env, args, setView) {
     }
 
     return 0;
-}`
+}`;
+
+const pwd = `function main(env, args, setView) {
+    setView(prev => [
+        ...prev,
+        env.fs.getPath(env.current, true) + '\\n']
+    );
+    return 0;
+}`;
 
 export function getCommands(parent) {
     return {
         cat: {
-            name: 'cat', type: 'exe', parent,
-            value: cat,
+            name: 'cat', type: 'exe', parent, value: cat,
         },
         clear: {
-            name: 'clear', type: 'exe', parent,
-            value: clear,
+            name: 'clear', type: 'exe', parent, value: clear,
         },
         ls: {
-            name: 'ls', type: 'exe', parent,
-            value: list,
+            name: 'ls', type: 'exe', parent, value: list,
         },
         mkdir: {
-            name: 'mkdir', type: 'exe', parent,
-            value: mkdir,
+            name: 'mkdir', type: 'exe', parent, value: mkdir,
         },
+        pwd: {
+            name: 'pwd', type: 'exe', parent, value: pwd,
+        }
     }
 }

@@ -118,7 +118,7 @@ const useFs = () => {
     }
 
     /// Gets path of given item
-    const getPath = (item) => {
+    const getPath = (item, full = false) => {
         if (!item.parent)
             return '/';
 
@@ -129,7 +129,7 @@ const useFs = () => {
             current = current.parent;
         }
 
-        if (path.startsWith('/home/visitor'))
+        if (!full && path.startsWith('/home/visitor'))
             path = path.replace('/home/visitor', '~');
 
         return path;
