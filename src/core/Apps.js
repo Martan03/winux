@@ -48,6 +48,13 @@ Icon=${icon}`;
 
 export function getDesktop(parent) {
     return {
+        'My Portfolio': {
+            name: 'My Portfolio',
+            type: 'app',
+            icon: './icons/internet-explorer.png',
+            url: 'https://martan03.github.io',
+            parent,
+        },
         'terminal.desktop': {
             name: 'terminal.desktop', type: 'desktop', parent,
             value: getDesktopFile(
@@ -59,7 +66,7 @@ export function getDesktop(parent) {
             value: getDesktopFile(
                 'Notepad', '/usr/bin/notepad', './icons/notepad.png',
             ),
-        }
+        },
     }
 }
 
@@ -84,8 +91,11 @@ export function getAppsFromDir(dir) {
 
     const apps = [];
     for (const file in dir.children) {
-        if (dir.children[file].type !== 'desktop')
+        if (dir.children[file].type !== 'desktop') {
+            if (dir.children[file].type === 'app')
+                apps.push(dir.children[file]);
             continue;
+        }
 
         apps.push(getDesktopInfo(dir.children[file].value));
     }
