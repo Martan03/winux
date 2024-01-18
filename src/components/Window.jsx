@@ -87,7 +87,8 @@ function BuildInApp({id, win, fs}) {
         case 'Terminal':
         case '/usr/bin/terminal':
             return <Terminal id={id} fs={fs} />
-        case 'Notepad' || '/usr/bin/notepad':
+        case 'Notepad':
+        case '/usr/bin/notepad':
             return <Notepad />
         default:
             return <p>App failed to load</p>
