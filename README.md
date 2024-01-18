@@ -23,8 +23,7 @@ npm run dev
 
 This is how it looks like:
 
-![image](https://github.com/Martan03/winux/assets/46300167/f72e0864-ae1c-43df-9c45-09031052364b)
-
+![image](https://github.com/Martan03/winux/assets/46300167/78a178cb-1ffd-4759-b595-694516400e5e)
 
 This website contains replica of **Windows 98**, which I find very nice
 looking + it's nostalgic. But to be fair, I don't really know Windows terminal,
