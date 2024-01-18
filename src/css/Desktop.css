@@ -395,7 +395,7 @@ h1 {
     background-color: black;
     padding: 3px 6px;
     color: #c5c5c5;
-    font-family: 'MonoPixelated';
+    font-family: 'MonoPixelated', monospace;
 }
 
 .term input {
@@ -415,7 +415,7 @@ h1 {
 }
 
 .term span {
-    font-family: 'MonoPixelated';
+    font-family: 'MonoPixelated', monospace;
     white-space: pre-wrap;
     word-break: break-all;
     line-height: 20px;

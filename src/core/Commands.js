@@ -10,13 +10,13 @@ export function execute(input, env, setView) {
 
     switch (cmd) {
         case "cd":
-            changeDir(prompt + input, args, env, setView);
+            changeDir(args, env, setView);
             break;
         case "echo":
-            echo(prompt + input, args, setView);
+            echo(args, setView);
             break;
         case "help":
-            help(prompt + input, setView);
+            help(setView);
             break;
         default:
             const file = env.fs.get(env.bin, cmd);
@@ -76,7 +76,7 @@ const cat = `function main(env, args, setView) {
     return 1;
 }`
 
-function changeDir(cmd, args, env, setView) {
+function changeDir(args, env, setView) {
     if (args.length <= 0)
         return 0;
 
@@ -94,23 +94,30 @@ const clear = `function main(env, args, setView) {
     return 0;
 }`
 
-function echo(cmd, args, setView) {
+function echo(args, setView) {
     let output = '';
     for (const arg of args) {
         output = `${output}${arg} `;
     }
     setView(prev => [
-        ...prev, cmd, output,
+        ...prev, output + '\n',
     ]);
     return 0;
 }
 
-function help(cmd, setView) {
+function help(setView) {
     setView(prev => [
-        ...prev, cmd,
-        "Welcome in winux by Martan03\n" +
-        "Commands:\n" +
-        "    cd\n",
+        ...prev,
+`Welcome in winux by Martan03
+
+Commands:
+  cd [directory]
+    changes current directory to the given directory
+  echo [arguments...]
+    prints the arguments
+  help
+    prints this help
+`,
     ]);
     return 0;
 }
