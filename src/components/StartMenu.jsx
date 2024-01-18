@@ -19,7 +19,7 @@ function Item({text, icon, onClick, iconSm, children}) {
 
 function ItemSm({item, wm, close, iconSm, children}) {
     const icon = item.Icon ?? item.icon ?? '';
-    const name = item.Name ?? item.title ?? '';
+    const name = item.Name ?? item.name ?? '';
 
     const open = () => {
         close();
