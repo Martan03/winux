@@ -10,6 +10,7 @@ const useWindowManager = () => {
         // Centers window
         const x = Math.max((window.innerWidth - 720) / 2, 0);
         const y = Math.max((window.innerHeight - 500) / 2, 0);
+        const zIndex = windows[focus] ? windows[focus].zIndex + 1 : 1;
 
         setFocus(windows.length);
         setWindows([
@@ -18,8 +19,8 @@ const useWindowManager = () => {
                 id: lastId,
                 minimized: false,
                 pos: { x, y },
-                zIndex: lastId,
-                app: app,
+                zIndex,
+                app,
             }
         ]);
         setLastId(lastId + 1);
@@ -45,16 +46,7 @@ const useWindowManager = () => {
         if (id !== focus)
             return;
 
-        let max = -1;
-        for (let i = 0; i < updated.length; i++) {
-            if (updated[i].minimized)
-                continue;
-
-            if (updated[max]?.zIndex ?? 0 < updated[i].zIndex) {
-                max = i;
-            }
-        }
-        setFocus(max);
+        topFocus(updated);
     }
 
     const unminimize = (id) => {
@@ -78,22 +70,26 @@ const useWindowManager = () => {
             return;
         }
 
-        let max = -1;
-        for (let i = 0; i < updated.length; i++) {
-            if (updated[i].minimized)
-                continue;
-
-            if (updated[max]?.zIndex ?? 0 < updated[i].zIndex) {
-                max = i;
-            }
-        }
-        setFocus(max);
+        topFocus(updated);
     }
 
     const move = (id, pos) => {
         var updated = [...windows];
         updated[id].pos = pos;
         setWindows(updated);
+    }
+
+    const topFocus = (windows) => {
+        let max = -1;
+        for (let i = 0; i < windows.length; i++) {
+            if (windows[i].minimized)
+                continue;
+
+            if (windows[max]?.zIndex ?? 0 < windows[i].zIndex) {
+                max = i;
+            }
+        }
+        setFocus(max);
     }
 
     return {
