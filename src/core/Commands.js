@@ -116,8 +116,16 @@ function help(cmd, setView) {
 }
 
 const list = `function main(env, args, setView) {
+    const dir = env.fs.get(env.current, args[0] ?? '');
+    if (!dir || !dir.children) {
+        setView(prev => [
+            ...prev, \`bash: ls: directory '\${args[0]}' not found\\n\`,
+        ]);
+        return 1;
+    }
+
     let res = '';
-    for (let item in env.current.children) {
+    for (let item in dir.children) {
         res += \`\${item} \`;
     }
     setView(prev => [

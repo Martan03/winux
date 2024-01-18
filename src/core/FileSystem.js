@@ -92,6 +92,9 @@ const useFs = () => {
         if (path.startsWith('/'))
             current = root;
 
+        if (newPath.length <= 0)
+            return current;
+
         for (let i = 0; i < newPath.length - 1; i++) {
             if (newPath[i] === '..') {
                 current = current.parent;
@@ -102,6 +105,10 @@ const useFs = () => {
             if (!current || !current.children)
                 return null;
         }
+
+        const last = newPath[newPath.length - 1];
+        if (last === '..')
+            return current?.parent;
 
         return current?.children[newPath[newPath.length - 1]];
     }
