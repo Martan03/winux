@@ -144,7 +144,7 @@ const list = `function main(env, args, setView) {
             continue;
         }
 
-        let res = args.length ? \`${arg}:\\n\` : '';
+        let res = args.length ? \`\${arg}:\\n\` : '';
         for (let item in dir.children) {
             res += \`\${item} \`;
         }
