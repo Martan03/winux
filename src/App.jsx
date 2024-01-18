@@ -2,7 +2,6 @@ import { useState } from 'react'
 import './css/App.css'
 import Grid from './components/Grid';
 import Window from './components/Window';
-import { getDesktopApps } from './core/Apps';
 import TaskBar from './components/TaskBar';
 import StartMenu from './components/StartMenu';
 import useFs from './core/FileSystem';
@@ -17,8 +16,6 @@ function App() {
     const wm = useWindowManager();
 
     const [startVis, setStartVis] = useState(false);
-
-    const apps = getDesktopApps();
 
     if (!on) {
         return <div className='turned-off'>how can I turn it on?</div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { getCommands } from "./Commands";
-import { getBinApps, getDesktop, getDesktopApps, getPrograms } from "../core/Apps";
+import { getBinApps, getDesktop, getPrograms } from "../core/Apps";
 
 const useFs = () => {
     const build = () => {

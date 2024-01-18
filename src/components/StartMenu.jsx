@@ -1,4 +1,4 @@
-import { getAppsFromDir, getFavourites, getPrograms } from '../core/Apps';
+import { getAppsFromDir, getFavourites } from '../core/Apps';
 import Arrow from '../assets/arrow.svg';
 
 function Item({text, icon, onClick, iconSm, children}) {
