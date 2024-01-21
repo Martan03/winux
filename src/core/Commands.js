@@ -1,19 +1,23 @@
 export function exec(input, env, wm, setView) {
+    const prompt = `visitor@winux ${env.fs.getPath(env.current)}$ `;
+    setView(prev => [...prev, prompt + input + '\n']);
+
     const [command, redirect, _] = input.split('>');
 
     if (redirect && redirect !== '') {
-        console.log("using redirect");
+        let output = '';
+        env.print = (val) => output += val;
+
+        execute(command, env, wm);
+        env.fs.saveToFile(env.current, redirect.trim(), output);
     } else {
-        console.log("without redirect");
+        env.print = env.error;
+        execute(command, env, wm);
     }
-    // const output = execute(command, env, wm, setView);
 }
 
-export function execute(input, env, wm, setView) {
+function execute(input, env, wm) {
     let [cmd, ...args] = input.split(' ').filter(word => word !== '');
-    const prompt = `visitor@winux ${env.fs.getPath(env.current)}$ `;
-
-    setView(prev => [...prev, prompt + input + '\n']);
 
     if (!cmd) {
         return;
@@ -21,40 +25,37 @@ export function execute(input, env, wm, setView) {
 
     switch (cmd) {
         case "cd":
-            changeDir(args, env, setView);
+            changeDir(args, env);
             break;
         case "echo":
-            echo(args, setView);
+            echo(args, env);
             break;
         case "help":
-            help(setView);
+            help(env);
             break;
         default:
             const file = env.fs.get(env.bin, cmd);
             if (!file)
-                error(setView, `${cmd}: command not found`);
+                error(env, `${cmd}: command not found`);
             else if (file.type === 'exe')
-                executeProgram(file, cmd, args, env, setView);
+                executeProgram(file, cmd, args, env);
             else if (file.type === 'app')
                 openApp(file, wm);
             else
-                error(setView, `${cmd}: file not executable`)
+                error(env, `${cmd}: file not executable`)
             break;
     }
 }
 
-function executeProgram(file, cmd, args, env, setView) {
+function executeProgram(file, cmd, args, env) {
     const execProgram = new Function(
-        'env', 'args', 'setView',
-        `${file.value}\nreturn main(env, args, setView);`
+        'env', 'args',
+        `${file.value}\nreturn main(env, args);`
     );
     try {
-        return execProgram(env, args, setView);
+        return execProgram(env, args);
     } catch (err) {
-        setView(prev => [
-            ...prev, `Error executing program '${cmd}'\n`,
-        ]);
-        console.error(err);
+        env.error(`Error executing program '${cmd}'\n`);
         return 1;
     }
 }
@@ -63,39 +64,30 @@ function openApp(file, wm) {
     wm.add(file);
 }
 
-function error(setView, err, ret = 1) {
-    setView(prev => [
-        ...prev,
-        `bash: ${err}\n`
-    ]);
+function error(env, err, ret = 1) {
+    env.error(`bash: ${err}\n`);
     return ret;
 }
 
 
 
-const cat = `function main(env, args, setView) {
+const cat = `function main(env, args) {
     if (args.length !== 1) {
-        setView(prev => [
-            ...prev, 'bash: cat: Invalid number of arguments\\n'
-        ]);
+        env.error('bash: cat: Invalid number of arguments\\n');
         return 1;
     }
 
     const file = env.fs.get(env.current, args[0]);
     if (file && !file.children) {
-        setView(prev => [
-            ...prev, file.value + '\\n'
-        ]);
+        env.print(file.value);
         return 0;
     }
 
-    setView(prev => [
-        ...prev, \`bash: cat: file '\${args[0]}' doesn't exist\\n\`,
-    ]);
+    env.error(\`bash: cat: file '\${args[0]}' doesn't exist\\n\`);
     return 1;
 }`;
 
-function changeDir(args, env, setView) {
+function changeDir(args, env) {
     if (args.length <= 0)
         return 0;
 
@@ -105,28 +97,25 @@ function changeDir(args, env, setView) {
         return 0;
     }
 
-    return error(setView, `cd ${args[0]}: No such file or directory`);
+    return error(env, `cd ${args[0]}: No such file or directory`);
 }
 
-const clear = `function main(env, args, setView) {
-    setView([]);
+const clear = `function main(env, args) {
+    env.clear();
     return 0;
 }`;
 
-function echo(args, setView) {
+function echo(args, env) {
     let output = '';
     for (const arg of args) {
         output = `${output}${arg} `;
     }
-    setView(prev => [
-        ...prev, output + '\n',
-    ]);
+    env.print(output + '\n');
     return 0;
 }
 
-function help(setView) {
-    setView(prev => [
-        ...prev,
+function help(env) {
+    env.print(
 `Welcome in winux by Martan03
 
 Commands:
@@ -137,20 +126,18 @@ Commands:
   help
     prints this help
 `,
-    ]);
+    );
     return 0;
 }
 
-const list = `function main(env, args, setView) {
+const list = `function main(env, args) {
     let ret = 0;
     if (args.length <= 0)
         args.push('');
     for (const arg of args) {
         const dir = env.fs.get(env.current, arg ?? '');
         if (!dir || !dir.children) {
-            setView(prev => [
-                ...prev, \`bash: ls: directory '\${arg}' not found\\n\`,
-            ]);
+            env.error(\`bash: ls: directory '\${arg}' not found\\n\`);
             ret = 1;
             continue;
         }
@@ -159,27 +146,21 @@ const list = `function main(env, args, setView) {
         for (let item in dir.children) {
             res += \`\${item} \`;
         }
-        setView(prev => [
-            ...prev, res + '\\n',
-        ]);
+        env.print(res + '\\n');
     }
     return ret;
 }`;
 
-const mkdir = `function main(env, args, setView) {
+const mkdir = `function main(env, args) {
     if (args.length <= 0) {
-        setView(prev => [
-            ...prev, "mkdir: missing operand\\n",
-        ]);
+        env.error("mkdir: missing operand\\n");
         return 1;
     }
 
     let ret = 0;
     for (const arg of args) {
         if (!env.fs.createDir(env.current, arg)) {
-            setView(prev => [
-                ...prev, \`mkdir: cannot create directory '\${arg}'\\n\`,
-            ]);
+            env.error(\`mkdir: cannot create directory '\${arg}'\\n\`);
             ret = 1;
         }
     }
@@ -187,21 +168,16 @@ const mkdir = `function main(env, args, setView) {
     return 0;
 }`;
 
-const pwd = `function main(env, args, setView) {
-    setView(prev => [
-        ...prev,
-        env.fs.getPath(env.current, true) + '\\n']
-    );
+const pwd = `function main(env, args) {
+    env.print(env.fs.getPath(env.current, true) + '\\n');
     return 0;
 }`;
 
-const rm = `function error(setView, path, err) {
-    setView(prev => [
-        ...prev, \`rm: cannot remove '\${path}': \${err}\\n\`,
-    ]);
+const rm = `function error(env, path, err) {
+    env.error(\`rm: cannot remove '\${path}': \${err}\\n\`);
 }
 
-function main(env, args, setView) {
+function main(env, args) {
     let items = [];
 
     let ret = 0;
@@ -215,13 +191,13 @@ function main(env, args, setView) {
         if (item) {
             items.push({item, path});
         } else {
-            error(setView, path, 'No such file or directory');
+            error(env, path, 'No such file or directory');
         }
     }
 
     for (let item of items) {
         if (item.item.children && !dir) {
-            error(setView, item.path, 'Is a directory');
+            error(env, item.path, 'Is a directory');
             continue;
         }
 

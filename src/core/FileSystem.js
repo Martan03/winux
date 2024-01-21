@@ -60,7 +60,7 @@ const useFs = () => {
 
         for (const part of newPath) {
             if (part === '..') {
-                current = current.parent;
+                current = current?.parent;
                 continue;
             }
 
@@ -136,9 +136,21 @@ const useFs = () => {
     }
 
     /// Creates file and adds it to given parent
-    const createFile = (name, content = '', type = 'txt') => {
-        const file = {name, content, type};
+    const createFile = (name, value = '', type = 'txt') => {
+        const file = {name, value, type};
         return add(parent, file);
+    }
+
+    const saveToFile = (dir, path, value, type = 'txt') => {
+        const index = path.lastIndexOf('/');
+        const parentPath = path.substring(0, index);
+        const name = path.substring(index + 1);
+        const parent = get(dir, parentPath);
+
+        if (!parent || name == '..')
+            return false;
+
+        parent.children[name] = {name, value, type, parent};
     }
 
     /// Creates directory and adds it to given parent
@@ -160,7 +172,7 @@ const useFs = () => {
 
     return {
         root, add, changeDir, find, get, getPath,
-        createFile, createDir, remove,
+        createFile, saveToFile, createDir, remove,
     }
 }
 

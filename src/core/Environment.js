@@ -3,6 +3,9 @@ export class Environment {
         this.fs = fs;
         this.current = this.fs.find('/home/visitor') ?? fs.root;
         this.bin = this.fs.find('/usr/bin');
-        this.setView = setView;
+
+        this.print = (val) => setView(prev => [...prev, val]);
+        this.error = (val) => setView(prev => [...prev, val]);
+        this.clear = () => setView([]);
     }
 }
