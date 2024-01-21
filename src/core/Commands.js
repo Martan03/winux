@@ -184,6 +184,42 @@ const pwd = `function main(env, args, setView) {
     return 0;
 }`;
 
+const rm = `function error(setView, path, err) {
+    setView(prev => [
+        ...prev, \`rm: cannot remove '\${path}': \${err}\\n\`,
+    ]);
+}
+
+function main(env, args, setView) {
+    let items = [];
+
+    let ret = 0;
+    let dir = false;
+    for (const path of args) {
+        if (path == '-r') {
+            dir = true;
+            continue;
+        }
+        const item = env.fs.get(env.current, path);
+        if (item) {
+            items.push({item, path});
+        } else {
+            error(setView, path, 'No such file or directory');
+        }
+    }
+
+    for (let item of items) {
+        if (item.item.children && !dir) {
+            error(setView, item.path, 'Is a directory');
+            continue;
+        }
+
+        env.fs.remove(item.item.parent, item.item.name);
+    }
+
+    return ret;
+}`;
+
 export function getCommands(parent) {
     return {
         cat: {
@@ -200,6 +236,9 @@ export function getCommands(parent) {
         },
         pwd: {
             name: 'pwd', type: 'exe', parent, value: pwd,
-        }
+        },
+        rm: {
+            name: 'rm', type: 'exe', parent, value: rm,
+        },
     }
 }

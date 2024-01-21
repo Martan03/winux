@@ -149,7 +149,7 @@ const useFs = () => {
 
     /// Removes child by its name from given directory
     const remove = (parent, name) => {
-        if (parent.children[name])
+        if (!parent.children[name])
             return false;
 
         delete parent.children[name];
