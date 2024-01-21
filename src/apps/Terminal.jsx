@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Environment } from "../core/Environment";
-import { execute } from "../core/Commands";
+import { exec, execute } from "../core/Commands";
 
 function Input({cmd, cursor}) {
     return (
@@ -22,12 +22,12 @@ function Prompt({env, cmd, cursor}) {
 }
 
 function Terminal({id, fs, wm}) {
-    const [env, setEnv] = useState(new Environment(fs));
+    const [view, setView] = useState([]);
+    const [env, setEnv] = useState(new Environment(fs, setView));
 
     const [cmd, setCmd] = useState('');
     const [history, setHistory] = useState([]);
     const [historyId, setHistoryId] = useState(-1);
-    const [view, setView] = useState([]);
     const [pos, setPos] = useState(0);
 
     const term = useRef(null);
@@ -60,6 +60,7 @@ function Terminal({id, fs, wm}) {
             setPos(0);
         } else if (e.key === 'Enter') {
             execute(cmd, env, wm, setView);
+            exec(cmd, env, wm, setView);
             setHistoryId(-1);
             setHistory(prev => [
                 cmd,

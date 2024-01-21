@@ -1,3 +1,14 @@
+export function exec(input, env, wm, setView) {
+    const [command, redirect, _] = input.split('>');
+
+    if (redirect && redirect !== '') {
+        console.log("using redirect");
+    } else {
+        console.log("without redirect");
+    }
+    // const output = execute(command, env, wm, setView);
+}
+
 export function execute(input, env, wm, setView) {
     let [cmd, ...args] = input.split(' ').filter(word => word !== '');
     const prompt = `visitor@winux ${env.fs.getPath(env.current)}$ `;
