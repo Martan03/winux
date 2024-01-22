@@ -48,6 +48,12 @@ const useFs = () => {
         return true;
     }
 
+    const rewrite = (parent, child) => {
+        child.parent = parent;
+        parent.children[child.name] = child;
+        setRoot(prev => ({...prev}));
+    }
+
     /// Returns directory based on given path
     const changeDir = (dir, path) => {
         if (path.startsWith('~'))
@@ -173,7 +179,7 @@ const useFs = () => {
     }
 
     return {
-        root, add, changeDir, find, get, getPath,
+        root, add, rewrite, changeDir, find, get, getPath,
         createFile, saveToFile, createDir, remove,
     }
 }

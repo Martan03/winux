@@ -51,11 +51,15 @@ function execute(input, env, wm) {
         case "help":
             help(env);
             break;
-        case "touch":
-            touch(env, args);
-            break;
         default:
-            const file = env.fs.get(env.bin, cmd);
+            let dir = env.bin;
+            if (cmd.startsWith('./') ||
+                cmd.startsWith('/') ||
+                cmd.startsWith('~')) {
+                dir = env.current;
+            }
+            const file = env.fs.get(dir, cmd);
+
             if (!file)
                 error(env, `${cmd}: command not found`);
             else if (file.type === 'exe')
@@ -120,6 +124,33 @@ function changeDir(env, args) {
 
     return error(env, `cd ${args[0]}: No such file or directory`);
 }
+
+const chmod = `function main(env, args) {
+    const mode = args.shift();
+
+    let ret = 0;
+    switch (mode) {
+        case "+x":
+            for (const arg of args) {
+                const file = env.fs.get(env.current, arg);
+                if (!file) {
+                    env.error(
+                        "chmod: cannot access '" + arg +
+                        "':No such file or directory\\n"
+                    );
+                    ret = 1;
+                    continue;
+                }
+                file.type = 'exe';
+                env.fs.rewrite(file.parent, file);
+            }
+            break;
+        default:
+            env.error(\`chmod: invalid mode: '\${mode}'\\n\`);
+            return 1;
+    }
+    return ret;
+}`
 
 const clear = `function main(env, args) {
     env.clear();
@@ -266,6 +297,9 @@ export function getCommands(parent) {
     return {
         cat: {
             name: 'cat', type: 'exe', parent, value: cat,
+        },
+        chmod: {
+            name: 'chmod', type: 'exe', parent, value: chmod,
         },
         clear: {
             name: 'clear', type: 'exe', parent, value: clear,
