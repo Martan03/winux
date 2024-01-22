@@ -274,6 +274,9 @@ const touch =`function main(env, args) {
         const parentPath = arg.slice(0, index);
         const file = arg.slice(index + 1);
 
+        if (file == '.')
+            continue;
+
         if (file == '..') {
             env.error(\`touch: setting times of '..': Permission denied\\n\`);
             ret = 1;
