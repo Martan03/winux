@@ -51,6 +51,9 @@ function execute(input, env, wm) {
         case "help":
             help(env);
             break;
+        case "touch":
+            touch(env, args);
+            break;
         default:
             const file = env.fs.get(env.bin, cmd);
             if (!file)
@@ -221,6 +224,44 @@ function main(env, args) {
     return ret;
 }`;
 
+const touch =`function main(env, args) {
+    let ret = 0;
+    for (const arg of args) {
+        const index = arg.lastIndexOf('/');
+        const parentPath = arg.slice(0, index);
+        const file = arg.slice(index + 1);
+
+        if (file == '..') {
+            env.error(\`touch: setting times of '..': Permission denied\\n\`);
+            ret = 1;
+            continue;
+        }
+
+        let parent = null;
+        if (index === -1)
+            parent = env.current;
+        else
+            parent = env.fs.get(env.current, parentPath);
+
+        if (!parent) {
+            env.error(
+                \`touch: cannot touch '\${arg}': No such file or directory\\n\`
+            );
+            ret = 1;
+            continue;
+        }
+
+        if (index === -1)
+        parent = env.current;
+        if (parent.children[file])
+            continue;
+
+        env.fs.createFile(parent, file);
+    }
+
+    return ret;
+}`;
+
 export function getCommands(parent) {
     return {
         cat: {
@@ -240,6 +281,9 @@ export function getCommands(parent) {
         },
         rm: {
             name: 'rm', type: 'exe', parent, value: rm,
+        },
+        touch: {
+            name: 'touch', type: 'exe', parent, value: touch,
         },
     }
 }

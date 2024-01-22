@@ -90,6 +90,8 @@ const useFs = () => {
     const get = (dir, path) => {
         if (path.startsWith('~'))
             path = path.replace('~', '/home/visitor');
+        else if (path.startsWith("./"))
+            path = path.replace("./", "");
         const newPath = path.split('/').filter(part => part !== '');
 
         let current = dir;
@@ -136,7 +138,7 @@ const useFs = () => {
     }
 
     /// Creates file and adds it to given parent
-    const createFile = (name, value = '', type = 'txt') => {
+    const createFile = (parent, name, value = '', type = 'txt') => {
         const file = {name, value, type};
         return add(parent, file);
     }
