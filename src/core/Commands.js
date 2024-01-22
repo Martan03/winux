@@ -2,7 +2,12 @@ export function exec(input, env, wm, setView) {
     const prompt = `visitor@winux ${env.fs.getPath(env.current)}$ `;
     setView(prev => [...prev, prompt + input + '\n']);
 
-    const [command, redirect, _] = input.split('>');
+    let redirect = '';
+    const regex = />\s*\w+/g;
+    const command = input.replace(regex, match => {
+        redirect = match.trim().slice(1);
+        return '';
+    });
 
     if (redirect && redirect !== '') {
         let output = '';
