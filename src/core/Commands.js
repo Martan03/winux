@@ -1,10 +1,17 @@
 function splitInput(input) {
-    const regex = /"([^"]*)"|'([^']*)'|(\S+)/g;
+    const regex = /"((?:\\.|[^"\\])*)"|'([^']*)'|(\S+)/g;
     const matches = [];
     let match;
     while ((match = regex.exec(input))) {
-        const result = match[1] || match[2] || match[3];
-        matches.push(result);
+        if (match[1]) {
+            const res = match[1].replace(/\\\"/g, '"').replace(/\\\\/g, '\\');
+            matches.push(res);
+        } else if (match[3]) {
+            const res = match[3].replace(/\\(.)/g, match => match[1]);
+            matches.push(res);
+        } else {
+            matches.push(match[2]);
+        }
     }
 
     const command = matches.shift();
