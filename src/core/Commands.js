@@ -1,3 +1,16 @@
+function splitInput(input) {
+    const regex = /"([^"]*)"|'([^']*)'|(\S+)/g;
+    const matches = [];
+    let match;
+    while ((match = regex.exec(input))) {
+        const result = match[1] || match[2] || match[3];
+        matches.push(result);
+    }
+
+    const command = matches.shift();
+    return [command, matches];
+}
+
 export function exec(input, env, wm, setView) {
     const prompt = `visitor@winux ${env.fs.getPath(env.current)}$ `;
     setView(prev => [...prev, prompt + input + '\n']);
@@ -22,7 +35,7 @@ export function exec(input, env, wm, setView) {
 }
 
 function execute(input, env, wm) {
-    let [cmd, ...args] = input.split(' ').filter(word => word !== '');
+    let [cmd, args] = splitInput(input);
 
     if (!cmd) {
         return;
@@ -30,10 +43,10 @@ function execute(input, env, wm) {
 
     switch (cmd) {
         case "cd":
-            changeDir(args, env);
+            changeDir(env, args);
             break;
         case "echo":
-            echo(args, env);
+            echo(env, args);
             break;
         case "help":
             help(env);
@@ -92,7 +105,7 @@ const cat = `function main(env, args) {
     return 1;
 }`;
 
-function changeDir(args, env) {
+function changeDir(env, args) {
     if (args.length <= 0)
         return 0;
 
@@ -110,12 +123,8 @@ const clear = `function main(env, args) {
     return 0;
 }`;
 
-function echo(args, env) {
-    let output = '';
-    for (const arg of args) {
-        output = `${output}${arg} `;
-    }
-    env.print(output + '\n');
+function echo(env, args) {
+    env.print(args.join(' ') + '\n');
     return 0;
 }
 
