@@ -80,11 +80,11 @@ function execute(input, env, wm) {
 }
 
 function executeProgram(file, cmd, args, env) {
-    const execProgram = new Function(
-        'env', 'args',
-        `${file.value}\nreturn main(env, args);`
-    );
     try {
+        const execProgram = new Function(
+            'env', 'args',
+            `${file.value}\nreturn main(env, args);`
+        );
         return execProgram(env, args);
     } catch (err) {
         env.error(`Error executing program '${cmd}'\n`);
@@ -135,27 +135,32 @@ function changeDir(env, args) {
 const chmod = `function main(env, args) {
     const mode = args.shift();
 
-    let ret = 0;
+    let type = 'exe';
     switch (mode) {
         case "+x":
-            for (const arg of args) {
-                const file = env.fs.get(env.current, arg);
-                if (!file) {
-                    env.error(
-                        "chmod: cannot access '" + arg +
-                        "':No such file or directory\\n"
-                    );
-                    ret = 1;
-                    continue;
-                }
-                file.type = 'exe';
-                env.fs.rewrite(file.parent, file);
-            }
+            break;
+        case "-x":
+            type = 'txt';
             break;
         default:
             env.error(\`chmod: invalid mode: '\${mode}'\\n\`);
             return 1;
     }
+
+    let ret = 0;
+    for (const arg of args) {
+        const file = env.fs.get(env.current, arg);
+        if (!file) {
+            env.error(
+                "chmod: cannot access '" + arg +
+                "':No such file or directory\\n"
+            );
+            ret = 1;
+            continue;
+        }
+        file.type = type;
+    }
+
     return ret;
 }`
 
@@ -275,10 +280,8 @@ const touch =`function main(env, args) {
             continue;
         }
 
-        let parent = null;
-        if (index === -1)
-            parent = env.current;
-        else
+        let parent = env.current;
+        if (index !== -1)
             parent = env.fs.get(env.current, parentPath);
 
         if (!parent) {
@@ -288,12 +291,6 @@ const touch =`function main(env, args) {
             ret = 1;
             continue;
         }
-
-        if (index === -1)
-        parent = env.current;
-        if (parent.children[file])
-            continue;
-
         env.fs.createFile(parent, file);
     }
 
