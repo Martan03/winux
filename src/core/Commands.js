@@ -22,7 +22,7 @@ export function exec(input, env, wm, setView) {
 }
 
 function execute(input, env, wm) {
-    let [cmd, args] = splitInput(input);
+    let [cmd, args] = splitInput(env, input);
 
     if (!cmd) {
         return;
@@ -77,17 +77,28 @@ function openApp(file, wm) {
     wm.add(file);
 }
 
+function replaceVars(env, input) {
+    input = input.replace(/\$\?/g, () => {
+        return env.vars['?'];
+    });
+    return input.replace(/\$([a-zA-Z_][a-zA-Z0-9_]*)/g, (_, varName) => {
+        return env.vars[varName] ?? '';
+    })
+}
+
 /// Splits input to command and arguments
-function splitInput(input) {
+function splitInput(env, input) {
     const regex = /"((?:\\.|[^"\\])*)"|'([^']*)'|(\S+)/g;
     const matches = [];
     let match;
     while ((match = regex.exec(input))) {
         if (match[1]) {
-            const res = match[1].replace(/\\\"/g, '"').replace(/\\\\/g, '\\');
+            let res = replaceVars(env, match[1]);
+            res = res.replace(/\\\"/g, '"').replace(/\\\\/g, '\\');
             matches.push(res);
         } else if (match[3]) {
-            const res = match[3].replace(/\\(.)/g, match => match[1]);
+            let res = replaceVars(env, match[3]);
+            res = res.replace(/\\(.)/g, match => match[1]);
             matches.push(res);
         } else {
             matches.push(match[2]);
