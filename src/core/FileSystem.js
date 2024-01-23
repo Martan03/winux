@@ -37,12 +37,49 @@ const useFs = () => {
 
     const [root, setRoot] = useState(build());
 
+
     /// Adds child item to the parent
     const add = (parent, child) => {
         child.parent = parent;
         parent.children[child.name] = child;
         setRoot(prev => ({...prev}));
     }
+
+    /// Creates new item on given path
+    const create = (dir, path, item) => {
+        const info = getPathInfo(path);
+        const parent = get(dir, info.parent);
+        if (!parent || parent.children[info.file])
+            return false;
+
+        item.name = info.file;
+        add(parent, item);
+        return true;
+    }
+
+    /// Creates file and adds it to given parent
+    const createFile = (dir, path, value = '', type = 'txt') => {
+        const file = {value, type};
+        return create(dir, path, file);
+    }
+
+    const saveToFile = (dir, path, value, type = 'txt') => {
+        const index = path.lastIndexOf('/');
+        const parentPath = path.substring(0, index);
+        const name = path.substring(index + 1);
+        const parent = get(dir, parentPath);
+
+        if (!parent || name == '..')
+            return false;
+
+        parent.children[name] = {name, value, type, parent};
+    }
+
+    /// Creates directory based on given path
+    const createDir = (dir, path) => {
+        return create(dir, path, {children: {}});
+    }
+
 
     /// Gets file or directory based on given path
     const get = (dir, path) => {
@@ -103,39 +140,6 @@ const useFs = () => {
         return path;
     }
 
-    /// Creates file and adds it to given parent
-    const createFile = (parent, name, value = '', type = 'txt') => {
-        if (parent.children[name])
-            return false;
-
-        const file = {name, value, type};
-        add(parent, file);
-        return true;
-    }
-
-    const saveToFile = (dir, path, value, type = 'txt') => {
-        const index = path.lastIndexOf('/');
-        const parentPath = path.substring(0, index);
-        const name = path.substring(index + 1);
-        const parent = get(dir, parentPath);
-
-        if (!parent || name == '..')
-            return false;
-
-        parent.children[name] = {name, value, type, parent};
-    }
-
-    /// Creates directory based on given path
-    const createDir = (dir, path) => {
-        const info = getPathInfo(path);
-        const parent = get(dir, info.parent);
-        if (!parent || parent.children[info.file])
-            return false;
-
-        const newDir = {name: info.file, children: {}, parent: null};
-        add(parent, newDir);
-        return true;
-    }
 
     /// Removes child by its name from given directory
     const remove = (parent, name) => {
@@ -147,6 +151,7 @@ const useFs = () => {
 
         return true;
     }
+
 
     /// Gets path info
     const getPathInfo = (path) => {

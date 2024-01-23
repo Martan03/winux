@@ -15,5 +15,9 @@ export class Environment {
 
     getDir = (path) => this.fs.getDir(this.current, path);
 
+    createFile = (path) => this.fs.createFile(this.current, path);
+
     createDir = (path) => this.fs.createDir(this.current, path);
+
+    getPath = (full = true) => this.fs.getPath(this.current, full);
 }

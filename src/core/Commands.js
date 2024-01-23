@@ -245,7 +245,7 @@ const mkdir = `function main(env, args) {
 
 /// pwd - displays current working directory path
 const pwd = `function main(env, args) {
-    env.print(env.fs.getPath(env.current, true) + '\\n');
+    env.print(env.getPath(true) + '\\n');
     return 0;
 }`;
 
@@ -264,11 +264,12 @@ function main(env, args) {
             dir = true;
             continue;
         }
-        const item = env.fs.get(env.current, path);
+        const item = env.get(path);
         if (item) {
             items.push({item, path});
         } else {
             error(env, path, 'No such file or directory');
+            ret = 1;
         }
     }
 
@@ -288,31 +289,15 @@ function main(env, args) {
 const touch =`function main(env, args) {
     let ret = 0;
     for (const arg of args) {
-        const index = arg.lastIndexOf('/');
-        const parentPath = arg.slice(0, index);
-        const file = arg.slice(index + 1);
-
-        if (file == '.')
+        if (env.get(arg))
             continue;
 
-        if (file == '..') {
-            env.error(\`touch: setting times of '..': Permission denied\\n\`);
-            ret = 1;
-            continue;
-        }
-
-        let parent = env.current;
-        if (index !== -1)
-            parent = env.fs.get(env.current, parentPath);
-
-        if (!parent) {
+        if (!env.createFile(arg)) {
             env.error(
                 \`touch: cannot touch '\${arg}': No such file or directory\\n\`
             );
             ret = 1;
-            continue;
         }
-        env.fs.createFile(parent, file);
     }
 
     return ret;
