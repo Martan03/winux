@@ -102,36 +102,69 @@ function error(env, err, ret = 1) {
 }
 
 
+//>=========================================================================<//
+//                             Built in programs                             //
+//>=========================================================================<//
 
+/// cd - changes current working directory based on given path
+function changeDir(env, args) {
+    if (args.length > 1)
+        return error(env, `cd: too many arguments`);
+
+    const current = env.fs.getDir(env.current, args[0] ?? '');
+    if (!current)
+        return error(env, `cd: ${args[0]}: No such file or directory`);
+
+    env.current = current;
+    return 0;
+}
+
+/// echo - prints arguments on stdout
+function echo(env, args) {
+    env.print(args.join(' ') + '\n');
+    return 0;
+}
+
+/// help - displays help
+function help(env) {
+    env.print(
+`Welcome in winux by Martan03
+
+Commands:
+  cd [directory]
+    changes current directory to the given directory
+  echo [arguments...]
+    prints the arguments
+  help
+    prints this help
+`,
+    );
+    return 0;
+}
+
+
+//>=========================================================================<//
+//                              $PATH programs                               //
+//>=========================================================================<//
+
+/// cat - displays content of the file
 const cat = `function main(env, args) {
     if (args.length !== 1) {
         env.error('bash: cat: Invalid number of arguments\\n');
         return 1;
     }
 
-    const file = env.fs.get(env.current, args[0]);
-    if (file && !file.children) {
-        env.print(file.value);
-        return 0;
+    const file = env.fs.getFile(env.current, args[0]);
+    if (!file) {
+        env.error(\`bash: cat: file '\${args[0]}' doesn't exist\\n\`);
+        return 1;
     }
 
-    env.error(\`bash: cat: file '\${args[0]}' doesn't exist\\n\`);
-    return 1;
+    env.print(file.value);
+    return 0;
 }`;
 
-function changeDir(env, args) {
-    if (args.length <= 0)
-        return 0;
-
-    const current = env.fs.changeDir(env.current, args[0]);
-    if (current) {
-        env.current = current;
-        return 0;
-    }
-
-    return error(env, `cd ${args[0]}: No such file or directory`);
-}
-
+/// chmod - changes file rights
 const chmod = `function main(env, args) {
     const mode = args.shift();
 
@@ -164,32 +197,13 @@ const chmod = `function main(env, args) {
     return ret;
 }`
 
+/// clear - clears screen
 const clear = `function main(env, args) {
     env.clear();
     return 0;
 }`;
 
-function echo(env, args) {
-    env.print(args.join(' ') + '\n');
-    return 0;
-}
-
-function help(env) {
-    env.print(
-`Welcome in winux by Martan03
-
-Commands:
-  cd [directory]
-    changes current directory to the given directory
-  echo [arguments...]
-    prints the arguments
-  help
-    prints this help
-`,
-    );
-    return 0;
-}
-
+/// ls - lists all files and directories from given directory
 const list = `function main(env, args) {
     let ret = 0;
     if (args.length <= 0)
@@ -211,6 +225,7 @@ const list = `function main(env, args) {
     return ret;
 }`;
 
+/// mkdir - create directory
 const mkdir = `function main(env, args) {
     if (args.length <= 0) {
         env.error("mkdir: missing operand\\n");
@@ -228,11 +243,13 @@ const mkdir = `function main(env, args) {
     return 0;
 }`;
 
+/// pwd - displays current working directory path
 const pwd = `function main(env, args) {
     env.print(env.fs.getPath(env.current, true) + '\\n');
     return 0;
 }`;
 
+/// rm - removes given file or directory
 const rm = `function error(env, path, err) {
     env.error(\`rm: cannot remove '\${path}': \${err}\\n\`);
 }
@@ -267,6 +284,7 @@ function main(env, args) {
     return ret;
 }`;
 
+/// touch - creates file
 const touch =`function main(env, args) {
     let ret = 0;
     for (const arg of args) {
@@ -300,6 +318,7 @@ const touch =`function main(env, args) {
     return ret;
 }`;
 
+/// Gets all commands in file system format
 export function getCommands(parent) {
     return {
         cat: {

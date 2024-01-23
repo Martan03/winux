@@ -3,6 +3,7 @@ import { getCommands } from "./Commands";
 import { getBinApps, getDesktop, getPrograms } from "../core/Apps";
 
 const useFs = () => {
+    // Adds files and directories to the file system
     const build = () => {
         const root = {name: 'root', children: {}, parent: null};
         const usr = {name: 'usr', children: {}, parent: root};
@@ -38,99 +39,50 @@ const useFs = () => {
 
     /// Adds child item to the parent
     const add = (parent, child) => {
-        if (parent.children[child.name])
-            return false;
-
-        child.parent = parent;
-        parent.children[child.name] = child;
-        setRoot(prev => ({...prev}));
-
-        return true;
-    }
-
-    const rewrite = (parent, child) => {
         child.parent = parent;
         parent.children[child.name] = child;
         setRoot(prev => ({...prev}));
     }
 
-    /// Returns directory based on given path
-    const changeDir = (dir, path) => {
-        if (path === '.')
-            return dir;
-
-        if (path.startsWith('~'))
-            path = path.replace('~', '/home/visitor');
-        else if (path.startsWith("./"))
-            path = path.replace("./", "");
-        const newPath = path.split('/').filter(part => part !== '');
+    /// Gets file or directory based on given path
+    const get = (dir, path) => {
+        const pathArr = path.split('/').filter(item => item !== '');
 
         let current = dir;
         if (path.startsWith('/'))
             current = root;
 
-        for (const part of newPath) {
-            if (part === '..') {
-                current = current?.parent;
-                continue;
-            }
+        for (const item of pathArr) {
+            if (!current)
+                break;
 
-            current = current?.children[part];
-            if (!current || !current.children)
-                return null;
-        }
-
-        return current;
-    }
-
-    /// Finds directory by given path from root directory
-    const find = (path) => {
-        const newPath = path.split('/').filter(part => part !== '');
-
-        let current = root;
-        for (const part of newPath) {
-            current = current?.children[part];
-            if (!current || !current?.children)
-                return null;
+            if (item === '..')
+                current = current.parent;
+            else if (item === '~')
+                current = current.children['home']?.children['visitor'];
+            else if (item !== '.')
+                current = current.children[item];
         }
 
         return current;
     }
 
     /// Gets file based on given path
-    const get = (dir, path) => {
-        if (path === '.')
-            return dir;
+    const getFile = (dir, path) => {
+        const file = get(dir, path);
+        if (file?.children)
+            return null;
 
-        if (path.startsWith('~'))
-            path = path.replace('~', '/home/visitor');
-        else if (path.startsWith("./"))
-            path = path.replace("./", "");
-        const newPath = path.split('/').filter(part => part !== '');
+        return file;
+    }
 
-        let current = dir;
-        if (path.startsWith('/'))
-            current = root;
+    /// Gets directory based on given path
+    const getDir = (dir, path) => {
+        const folder = get(dir, path);
+        if (!folder?.children)
+            return null;
 
-        if (newPath.length <= 0)
-            return current;
-
-        for (let i = 0; i < newPath.length - 1; i++) {
-            if (newPath[i] === '..') {
-                current = current.parent;
-                continue;
-            }
-
-            current = current?.children[newPath[i]];
-            if (!current || !current.children)
-                return null;
-        }
-
-        const last = newPath[newPath.length - 1];
-        if (last === '..')
-            return current?.parent;
-
-        return current?.children[newPath[newPath.length - 1]];
+        return folder;
     }
 
     /// Gets path of given item
@@ -186,8 +138,11 @@ const useFs = () => {
         return true;
     }
 
+    /// Gets parent path from given path
+    const getParentPath = (path) => path.slice(0, path.lastIndexOf('/'));
+
     return {
-        root, add, rewrite, changeDir, find, get, getPath,
+        root, add, get, getFile, getDir, getPath,
         createFile, saveToFile, createDir, remove,
     }
 }

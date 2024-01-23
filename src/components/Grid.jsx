@@ -3,7 +3,7 @@ import Icon from "./Icon";
 
 /// Renders grid of icons
 function Grid({fs, wm}) {
-    const desktop = fs.find('/home/visitor/Desktop');
+    const desktop = fs.getDir(fs.root, '/home/visitor/Desktop');
     const apps = getAppsFromDir(desktop);
 
     return (
