@@ -373,10 +373,11 @@ h1 {
 }
 
 .start-menu-item-submenu {
+    min-width: 120px;
+    min-height: 20px;
     position: absolute;
     left: calc(100% - 2px);
     top: 0;
-    min-width: 120px;
     pointer-events: none;
     opacity: 0;
     padding: 2px;

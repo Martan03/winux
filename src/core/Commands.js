@@ -1,3 +1,5 @@
+import { splitInput } from "./Lexer";
+
 export function exec(input, env, wm, setView) {
     const prompt = `${env.vars['USER']}@winux ${env.getPath()}$ `;
     setView(prev => [...prev, prompt + input + '\n']);
@@ -78,38 +80,6 @@ function executeProgram(file, cmd, args, env) {
 
 function openApp(file, wm) {
     wm.add(file);
-}
-
-function replaceVars(env, input) {
-    input = input.replace(/\$\?/g, () => {
-        return env.vars['?'];
-    });
-    return input.replace(/\$([a-zA-Z_][a-zA-Z0-9_]*)/g, (_, varName) => {
-        return env.vars[varName] ?? '';
-    })
-}
-
-/// Splits input to command and arguments
-function splitInput(env, input) {
-    const regex = /"((?:\\.|[^"\\])*)"|'([^']*)'|(\S+)/g;
-    const matches = [];
-    let match;
-    while ((match = regex.exec(input))) {
-        if (match[1]) {
-            let res = replaceVars(env, match[1]);
-            res = res.replace(/\\\"/g, '"').replace(/\\\\/g, '\\');
-            matches.push(res);
-        } else if (match[3]) {
-            let res = replaceVars(env, match[3]);
-            res = res.replace(/\\(.)/g, match => match[1]);
-            matches.push(res);
-        } else {
-            matches.push(match[2]);
-        }
-    }
-
-    const command = matches.shift();
-    return [command, matches];
 }
 
 function error(env, err, ret = 1) {
