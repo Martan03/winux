@@ -45,6 +45,25 @@ function ItemSm({item, wm, close, iconSm, children}) {
     )
 }
 
+/// Renders submenu with files from directory on given path
+function FilesFromDir({wm, fs, path, close}) {
+    const dir = fs.get(fs.root, path);
+    const files = getAppsFromDir(dir);
+
+    return (
+        <div className='start-menu-item-submenu'>
+            {files.map((item, key) => (
+                <ItemSm
+                    key={key}
+                    item={item}
+                    wm={wm}
+                    close={close}
+                />
+            ))}
+        </div>
+    );
+}
+
 function StartMenu({startVis, setStartVis, addWindow, setDialog, fs, wm}) {
     if (!startVis)
         return;
@@ -73,30 +92,23 @@ function StartMenu({startVis, setStartVis, addWindow, setDialog, fs, wm}) {
                 </div>
                 <div className="start-menu-content">
                     <Item text="Programs" icon="programs.png" iconSm>
-                        <div className='start-menu-item-submenu'>
-                            {programs.map((item, key) => (
-                                <ItemSm
-                                    key={key}
-                                    item={item}
-                                    wm={wm}
-                                    close={() => setStartVis(false)}
-                                />
-                            ))}
-                        </div>
+                        <FilesFromDir
+                            wm={wm} fs={fs} path='/usr/share/applications'
+                            close={() => setStartVis(false)}
+                        />
                     </Item>
                     <Item text="Favourites" icon="favourites.png" iconSm>
-                        <div className="start-menu-item-submenu">
-                            {favApps.map((item, key) => (
-                                <ItemSm
-                                    key={key}
-                                    item={item}
-                                    wm={wm}
-                                    close={() => setStartVis(false)}
-                                />
-                            ))}
-                        </div>
+                        <FilesFromDir
+                            wm={wm} fs={fs} path='/home/visitor/Favourites'
+                            close={() => setStartVis(false)}
+                        />
                     </Item>
-                    <Item text="Documents" icon="documents.png" iconSm />
+                    <Item text="Documents" icon="documents.png" iconSm>
+                        <FilesFromDir
+                            wm={wm} fs={fs} path='/home/visitor/Documents'
+                            close={() => setStartVis(false)}
+                        />
+                    </Item>
                     <Item text="Settings" icon="settings.png" />
                     <Item text="Find" icon="search.png" />
                     <Item text="Help" icon="help.png" iconSm />
