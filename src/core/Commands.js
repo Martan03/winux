@@ -1,25 +1,5 @@
-function splitInput(input) {
-    const regex = /"((?:\\.|[^"\\])*)"|'([^']*)'|(\S+)/g;
-    const matches = [];
-    let match;
-    while ((match = regex.exec(input))) {
-        if (match[1]) {
-            const res = match[1].replace(/\\\"/g, '"').replace(/\\\\/g, '\\');
-            matches.push(res);
-        } else if (match[3]) {
-            const res = match[3].replace(/\\(.)/g, match => match[1]);
-            matches.push(res);
-        } else {
-            matches.push(match[2]);
-        }
-    }
-
-    const command = matches.shift();
-    return [command, matches];
-}
-
 export function exec(input, env, wm, setView) {
-    const prompt = `visitor@winux ${env.fs.getPath(env.current)}$ `;
+    const prompt = `visitor@winux ${env.getPath()}$ `;
     setView(prev => [...prev, prompt + input + '\n']);
 
     let redirect = '';
@@ -97,11 +77,31 @@ function openApp(file, wm) {
     wm.add(file);
 }
 
+/// Splits input to command and arguments
+function splitInput(input) {
+    const regex = /"((?:\\.|[^"\\])*)"|'([^']*)'|(\S+)/g;
+    const matches = [];
+    let match;
+    while ((match = regex.exec(input))) {
+        if (match[1]) {
+            const res = match[1].replace(/\\\"/g, '"').replace(/\\\\/g, '\\');
+            matches.push(res);
+        } else if (match[3]) {
+            const res = match[3].replace(/\\(.)/g, match => match[1]);
+            matches.push(res);
+        } else {
+            matches.push(match[2]);
+        }
+    }
+
+    const command = matches.shift();
+    return [command, matches];
+}
+
 function error(env, err, ret = 1) {
     env.error(`bash: ${err}\n`);
     return ret;
 }
-
 
 //>=========================================================================<//
 //                             Built in programs                             //
