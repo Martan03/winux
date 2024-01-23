@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { getCommands } from "./Commands";
-import { getBinApps, getDesktop, getPrograms } from "../core/Apps";
+import { getBinApps, getDesktop, getFavourites, getPrograms } from "../core/Apps";
 
 const useFs = () => {
     // Adds files and directories to the file system
@@ -27,6 +27,12 @@ const useFs = () => {
             name: 'Desktop', children: getDesktop(visitor), parent: visitor
         };
         visitor.children.Desktop = desktop;
+
+        const favs = {
+            name: 'Favourites', children: getFavourites(visitor),
+            parent: visitor,
+        }
+        visitor.children.Favourites = favs;
 
         usr.children.bin = bin;
         usr.children.share = share;

@@ -18,14 +18,16 @@ export function getPrograms(parent) {
     }
 }
 
-export function getFavourites() {
-    return [
-        {
+export function getFavourites(parent) {
+    return {
+        'My Portfolio': {
             name: 'My Portfolio',
+            type: 'app',
             icon: './icons/internet-explorer.png',
             url: 'https://martan03.github.io',
+            parent,
         },
-    ];
+    };
 }
 
 export function getBinApps(parent) {

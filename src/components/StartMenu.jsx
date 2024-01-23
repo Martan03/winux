@@ -52,7 +52,8 @@ function StartMenu({startVis, setStartVis, addWindow, setDialog, fs, wm}) {
     const apps = fs.get(fs.root, '/usr/share/applications');
     const programs = getAppsFromDir(apps);
 
-    const favs = getFavourites();
+    const favs = fs.get(fs.root, '/home/visitor/Favourites');
+    const favApps = getAppsFromDir(favs);
 
     const openWindow = (app) => {
         setStartVis(false);
@@ -85,7 +86,7 @@ function StartMenu({startVis, setStartVis, addWindow, setDialog, fs, wm}) {
                     </Item>
                     <Item text="Favourites" icon="favourites.png" iconSm>
                         <div className="start-menu-item-submenu">
-                            {favs.map((item, key) => (
+                            {favApps.map((item, key) => (
                                 <ItemSm
                                     key={key}
                                     item={item}
