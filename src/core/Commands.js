@@ -87,6 +87,7 @@ function executeProgram(file, cmd, args, env) {
         );
         return execProgram(env, args);
     } catch (err) {
+        console.log(err);
         env.error(`Error executing program '${cmd}'\n`);
         return 1;
     }
@@ -111,7 +112,7 @@ function changeDir(env, args) {
     if (args.length > 1)
         return error(env, `cd: too many arguments`);
 
-    const current = env.fs.getDir(env.current, args[0] ?? '');
+    const current = env.getDir(args[0] ?? '');
     if (!current)
         return error(env, `cd: ${args[0]}: No such file or directory`);
 
@@ -154,7 +155,7 @@ const cat = `function main(env, args) {
         return 1;
     }
 
-    const file = env.fs.getFile(env.current, args[0]);
+    const file = env.getFile(args[0]);
     if (!file) {
         env.error(\`bash: cat: file '\${args[0]}' doesn't exist\\n\`);
         return 1;
@@ -182,7 +183,7 @@ const chmod = `function main(env, args) {
 
     let ret = 0;
     for (const arg of args) {
-        const file = env.fs.get(env.current, arg);
+        const file = en.get(arg);
         if (!file) {
             env.error(
                 "chmod: cannot access '" + arg +
@@ -205,21 +206,20 @@ const clear = `function main(env, args) {
 
 /// ls - lists all files and directories from given directory
 const list = `function main(env, args) {
-    let ret = 0;
     if (args.length <= 0)
         args.push('');
+
+    let ret = 0;
     for (const arg of args) {
-        const dir = env.fs.get(env.current, arg ?? '');
-        if (!dir || !dir.children) {
+        const dir = env.getDir(arg);
+        if (!dir) {
             env.error(\`bash: ls: directory '\${arg}' not found\\n\`);
             ret = 1;
             continue;
         }
 
         let res = args.length > 1 ? \`\${arg}:\\n\` : '';
-        for (let item in dir.children) {
-            res += \`\${item} \`;
-        }
+        res += Object.keys(dir.children).join(' ');
         env.print(res + '\\n');
     }
     return ret;
@@ -234,13 +234,13 @@ const mkdir = `function main(env, args) {
 
     let ret = 0;
     for (const arg of args) {
-        if (!env.fs.createDir(env.current, arg)) {
+        if (!env.createDir(arg)) {
             env.error(\`mkdir: cannot create directory '\${arg}'\\n\`);
             ret = 1;
         }
     }
 
-    return 0;
+    return ret;
 }`;
 
 /// pwd - displays current working directory path

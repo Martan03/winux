@@ -105,8 +105,12 @@ const useFs = () => {
 
     /// Creates file and adds it to given parent
     const createFile = (parent, name, value = '', type = 'txt') => {
+        if (parent.children[name])
+            return false;
+
         const file = {name, value, type};
-        return add(parent, file);
+        add(parent, file);
+        return true;
     }
 
     const saveToFile = (dir, path, value, type = 'txt') => {
@@ -121,10 +125,16 @@ const useFs = () => {
         parent.children[name] = {name, value, type, parent};
     }
 
-    /// Creates directory and adds it to given parent
-    const createDir = (parent, name) => {
-        const dir = {name, children: {}, parent: null};
-        return add(parent, dir);
+    /// Creates directory based on given path
+    const createDir = (dir, path) => {
+        const info = getPathInfo(path);
+        const parent = get(dir, info.parent);
+        if (!parent || parent.children[info.file])
+            return false;
+
+        const newDir = {name: info.file, children: {}, parent: null};
+        add(parent, newDir);
+        return true;
     }
 
     /// Removes child by its name from given directory
@@ -138,8 +148,17 @@ const useFs = () => {
         return true;
     }
 
-    /// Gets parent path from given path
-    const getParentPath = (path) => path.slice(0, path.lastIndexOf('/'));
+    /// Gets path info
+    const getPathInfo = (path) => {
+        const index = path.lastIndexOf('/');
+        if (index === -1)
+            return { parent: '', file: path };
+
+        return {
+            parent: path.slice(0, index),
+            file: path.slice(index + 1),
+        };
+    }
 
     return {
         root, add, get, getFile, getDir, getPath,

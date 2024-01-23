@@ -8,4 +8,12 @@ export class Environment {
         this.error = (val) => setView(prev => [...prev, val]);
         this.clear = () => setView([]);
     }
+
+    get = (path) => this.fs.get(this.current, path);
+
+    getFile = (path) => this.fs.getFile(this.current, path);
+
+    getDir = (path) => this.fs.getDir(this.current, path);
+
+    createDir = (path) => this.fs.createDir(this.current, path);
 }
