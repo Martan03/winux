@@ -15,7 +15,7 @@ function Input({cmd, cursor}) {
 function Prompt({env, cmd, cursor}) {
     return (
         <>
-            <span>visitor@winux {env.getPath()}$ </span>
+            <span>{env.vars['USER']}@winux {env.getPath()}$ </span>
             <Input cmd={cmd} cursor={cursor} />
         </>
     )

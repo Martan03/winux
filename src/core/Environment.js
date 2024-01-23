@@ -2,7 +2,6 @@ export class Environment {
     constructor(fs, setView) {
         this.fs = fs;
         this.current = this.fs.getDir(fs.root, '/home/visitor') ?? fs.root;
-        this.bin = this.fs.getDir(fs.root, '/usr/bin');
 
         this.vars = {
             'HOME': '/home/visitor',
@@ -16,7 +15,7 @@ export class Environment {
         this.clear = () => setView([]);
     }
 
-    get = (path) => this.fs.get(this.current, path);
+    get = (path) => this.fs.get(this.current, path, this.vars['HOME']);
 
     getFile = (path) => this.fs.getFile(this.current, path);
 
@@ -26,5 +25,7 @@ export class Environment {
 
     createDir = (path) => this.fs.createDir(this.current, path);
 
-    getPath = (full = false) => this.fs.getPath(this.current, full);
+    getPath = (full = false) => {
+        return this.fs.getPath(this.current, this.vars['HOME'], full);
+    }
 }

@@ -1,5 +1,5 @@
 export function exec(input, env, wm, setView) {
-    const prompt = `visitor@winux ${env.getPath()}$ `;
+    const prompt = `${env.vars['USER']}@winux ${env.getPath()}$ `;
     setView(prev => [...prev, prompt + input + '\n']);
 
     let redirect = '';
@@ -35,11 +35,14 @@ function execute(input, env, wm) {
         case "echo":
             echo(env, args);
             break;
+        case "export":
+            exportVar(env, args);
+            break;
         case "help":
             help(env);
             break;
         default:
-            let dir = env.bin;
+            let dir = env.get(env.vars['PATH']);
             if (cmd.startsWith('./') ||
                 cmd.startsWith('/') ||
                 cmd.startsWith('~')) {
@@ -135,6 +138,13 @@ function changeDir(env, args) {
 function echo(env, args) {
     env.print(args.join(' ') + '\n');
     return 0;
+}
+
+function exportVar(env, args) {
+    for (const arg of args) {
+        const [name, val] = arg.split('=');
+        env.vars[name] = val;
+    }
 }
 
 /// help - displays help

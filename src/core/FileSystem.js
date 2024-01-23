@@ -82,7 +82,7 @@ const useFs = () => {
 
 
     /// Gets file or directory based on given path
-    const get = (dir, path) => {
+    const get = (dir, path, home = '/home/visitor') => {
         const pathArr = path.split('/').filter(item => item !== '');
 
         let current = dir;
@@ -93,12 +93,15 @@ const useFs = () => {
             if (!current)
                 break;
 
-            if (item === '..')
+            if (item === '..') {
                 current = current.parent;
-            else if (item === '~')
-                current = current.children['home']?.children['visitor'];
-            else if (item !== '.')
+            } else if (item === '~') {
+                const parts = home.split('/').filter(item => item !== '');
+                for (const part of parts)
+                    current = current?.children[part];
+            } else if (item !== '.') {
                 current = current.children[item];
+            }
         }
 
         return current;
@@ -123,7 +126,7 @@ const useFs = () => {
     }
 
     /// Gets path of given item
-    const getPath = (item, full = false) => {
+    const getPath = (item, home = '/home/visitor', full = false) => {
         if (!item.parent)
             return '/';
 
@@ -134,8 +137,8 @@ const useFs = () => {
             current = current.parent;
         }
 
-        if (!full && path.startsWith('/home/visitor'))
-            path = path.replace('/home/visitor', '~');
+        if (!full && path.startsWith(home))
+            path = path.replace(home, '~');
 
         return path;
     }
