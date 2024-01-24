@@ -24,15 +24,6 @@ export function execute(input, env, wm, setView) {
 }
 
 function executePart(input, env, wm, print) {
-    /*
-    let redirect = '';
-    const regex = />\s*[\w/]+/g;
-    const command = input.replace(regex, match => {
-        redirect = match.trim().slice(1);
-        return '';
-    });
-    */
-
     const [cmd, args, redirect] = splitInput(env, input);
 
     let ret;
@@ -122,6 +113,7 @@ function changeDir(env, args) {
         return error(env, `cd: ${args[0]}: No such file or directory`);
 
     env.current = current;
+    env.vars['PWD'] = env.getPath(true);
     return 0;
 }
 
@@ -133,6 +125,14 @@ function echo(env, args) {
 
 /// export - sets value of the variable
 function exportVar(env, args) {
+    if (args.length <= 0) {
+        env.print(Object.keys(env.vars)
+            .map(key => `declare -x ${key}="${env.vars[key]}"`)
+            .join('\n') + '\n'
+        );
+        return 0;
+    }
+
     let ret = 0;
     for (const arg of args) {
         const [name, val] = arg.split('=');
@@ -156,6 +156,8 @@ Commands:
     changes current directory to the given directory
   echo [arguments...]
     prints the arguments
+  export [name[=value]...]
+    sets variable 'name' to 'value'
   help
     prints this help
 `,

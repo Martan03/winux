@@ -6,6 +6,7 @@ export class Environment {
         this.vars = {
             'HOME': '/home/visitor',
             'PATH': '/usr/bin',
+            'PWD': '/home/visitor',
             'USER': 'visitor',
             '?': 0,
         }
