@@ -24,31 +24,33 @@ export function execute(input, env, wm, setView) {
 }
 
 function executePart(input, env, wm, print) {
+    /*
     let redirect = '';
     const regex = />\s*[\w/]+/g;
     const command = input.replace(regex, match => {
         redirect = match.trim().slice(1);
         return '';
     });
+    */
+
+    const [cmd, args, redirect] = splitInput(env, input);
 
     let ret;
     if (redirect && redirect !== '') {
         let output = '';
         env.print = (val) => output += val;
 
-        ret = executeCommand(command, env, wm);
+        ret = executeCommand(cmd, args, env, wm);
         env.fs.saveToFile(env.current, redirect.trim(), output);
     } else {
         env.print = print;
-        ret = executeCommand(command, env, wm);
+        ret = executeCommand(cmd, args, env, wm);
     }
 
     return ret;
 }
 
-function executeCommand(input, env, wm) {
-    let [cmd, args] = splitInput(env, input);
-
+function executeCommand(cmd, args, env, wm) {
     if (!cmd) {
         return 0;
     }

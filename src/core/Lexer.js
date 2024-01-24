@@ -1,14 +1,30 @@
 export function splitInput(env, input) {
     let args = [];
+    let file = '';
+    let redirect = false;
 
     let left = input;
     let res = '';
     while (left.length > 0) {
         if (left[0] === ' ') {
             left = left.slice(1);
+            if (res !== '') {
+                if (redirect) {
+                    file = res;
+                    redirect = false;
+                } else {
+                    args.push(res);
+                }
+            }
+
+            res = '';
+            continue;
+        } else if (left[0] === '>') {
+            redirect = true;
+            left = left.slice(1);
+
             if (res !== '')
                 args.push(res);
-
             res = '';
             continue;
         }
@@ -25,10 +41,14 @@ export function splitInput(env, input) {
         res += result;
         left = remain;
     }
-    if (res !== '')
-        args.push(res);
+    if (res !== '') {
+        if (redirect)
+            file = res;
+        else
+            args.push(res);
+    }
 
-    return [args.shift(), args];
+    return [args.shift(), args, file];
 }
 
 function doubleQuotes(env, input) {
