@@ -43,6 +43,9 @@ function WindowBar({id, win, wm}) {
     // Starts window dragging action
     const handleMouseDown = (e) => {
         e.preventDefault();
+        if (win.maximized)
+            return;
+
         setIsDrag(true);
         setStartPos({
             x: e.clientX - win.pos.x,
@@ -57,6 +60,13 @@ function WindowBar({id, win, wm}) {
     const onMinimize = (e) => {
         e.stopPropagation();
         wm.minimize(id);
+    }
+
+    const onMaximize = () => {
+        if (win.maximized)
+            wm.unmaximize(id);
+        else
+            wm.maximize(id);
     }
 
     const onClose = (e) => {
@@ -74,6 +84,7 @@ function WindowBar({id, win, wm}) {
             </div>
             <div>
                 <button className="btn" onMouseDown={onMinimize}>_</button>
+                <button className="btn ts" onMouseDown={onMaximize}>🗖</button>
                 <button className="btn" onMouseDown={onClose}>X</button>
             </div>
         </div>
@@ -107,11 +118,26 @@ function Window({
     if (win.minimized)
         return;
 
+    let style = {
+        top: win.pos.y,
+        left: win.pos.x,
+        zIndex: win.zIndex,
+    };
+    if (win.maximized) {
+        style = {
+            top: 0,
+            left: 0,
+            zIndex: win.zIndex,
+            width: window.screen.width,
+            height: window.screen.height - 28,
+        };
+    }
+
     return (
         <div
             className="window"
             onMouseDown={() => wm.changeFocus(id)}
-            style={{top: win.pos.y, left: win.pos.x, zIndex: win.zIndex}}
+            style={style}
         >
             <WindowBar id={id} win={win} wm={wm} />
             <div className="window-content">

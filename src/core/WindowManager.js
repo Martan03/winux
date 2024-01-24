@@ -18,6 +18,7 @@ const useWindowManager = () => {
             {
                 id: lastId,
                 minimized: false,
+                maximized: false,
                 pos: { x, y },
                 zIndex,
                 app,
@@ -82,6 +83,26 @@ const useWindowManager = () => {
         setFocus(id);
     }
 
+    /// Maximizes window on given id
+    const maximize = (id) => {
+        var updated = [...windows];
+        updated[id].maximized = true;
+
+        // if (id !== focus) {
+        //     updated[id].zIndex = updated[focus] ? updated[focus].zIndex + 1 : 1;
+        //     setFocus(id)
+        // }
+
+        setWindows(updated);
+    }
+
+    /// Unmaximizes window on given id
+    const unmaximize = (id) => {
+        var updated = [...windows];
+        updated[id].maximized = false;
+        setWindows(updated);
+    }
+
     /// Closes window
     const close = (id) => {
         var updated = [...windows];
@@ -117,8 +138,8 @@ const useWindowManager = () => {
     }
 
     return {
-        windows, setWindows, focus, setFocus, add, addFromFile,
-        changeFocus, minimize, unminimize, close, move,
+        windows, setWindows, focus, setFocus, add, addFromFile, changeFocus,
+        minimize, unminimize, maximize, unmaximize, close, move,
     }
 }
 
