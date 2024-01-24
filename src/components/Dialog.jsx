@@ -43,14 +43,30 @@ export function ShutdownDialog({onClose, setOn}) {
     )
 }
 
+function NotImplementDialog({onClose}) {
+    return (
+        <WindowDialog title="Not implemented..." onClose={onClose}>
+            <div className="shutdown">
+                <img src="./icons/error.png" alt="error" />
+                <div>
+                    <p>I'm sorry, but this isn't implemented yet</p>
+                </div>
+            </div>
+        </WindowDialog>
+    )
+}
+
 export function Dialog({dialog, setDialog, setOn}) {
     const onClose = () => {
         setDialog(null);
     }
 
-    if (dialog === 'shutdown') {
-        return <ShutdownDialog onClose={onClose} setOn={setOn} />
+    switch (dialog) {
+        case 'shutdown':
+            return <ShutdownDialog onClose={onClose} setOn={setOn} />
+        case 'notImplement':
+            return <NotImplementDialog onClose={onClose} />
+        default:
+            return <></>;
     }
-
-    return <></>
 }

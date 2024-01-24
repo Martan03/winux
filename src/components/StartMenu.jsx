@@ -1,4 +1,4 @@
-import { getAppsFromDir, getFavourites } from '../core/Apps';
+import { getAppsFromDir } from '../core/Apps';
 import Arrow from '../assets/arrow.svg';
 
 function Item({text, icon, onClick, iconSm, children}) {
@@ -64,24 +64,18 @@ function FilesFromDir({wm, fs, path, close}) {
     );
 }
 
-function StartMenu({startVis, setStartVis, addWindow, setDialog, fs, wm}) {
+function StartMenu({startVis, setStartVis, setDialog, fs, wm}) {
     if (!startVis)
         return;
-
-    const apps = fs.get(fs.root, '/usr/share/applications');
-    const programs = getAppsFromDir(apps);
-
-    const favs = fs.get(fs.root, '/home/visitor/Favourites');
-    const favApps = getAppsFromDir(favs);
-
-    const openWindow = (app) => {
-        setStartVis(false);
-        addWindow(app);
-    }
 
     const onShutdown = () => {
         setStartVis(false);
         setDialog('shutdown');
+    }
+
+    const openNotImplement = () => {
+        setStartVis(false);
+        setDialog('notImplement')
     }
 
     return (
@@ -109,12 +103,17 @@ function StartMenu({startVis, setStartVis, addWindow, setDialog, fs, wm}) {
                             close={() => setStartVis(false)}
                         />
                     </Item>
-                    <Item text="Settings" icon="settings.png" />
-                    <Item text="Find" icon="search.png" />
-                    <Item text="Help" icon="help.png" iconSm />
-                    <Item text="Run..." icon="run.png" iconSm />
+                    <Item text="Settings" icon="settings.png"
+                          onClick={openNotImplement} />
+                    <Item text="Find" icon="search.png"
+                          onClick={openNotImplement} />
+                    <Item text="Help" icon="help.png" iconSm
+                          onClick={openNotImplement} />
+                    <Item text="Run..." icon="run.png" iconSm
+                          onClick={openNotImplement} />
                     <div className="start-menu-sep"></div>
-                    <Item text="Log Off..." icon="logout.png" />
+                    <Item text="Log Off..." icon="logout.png"
+                          onClick={openNotImplement} />
                     <Item
                         text="Shut Down..."
                         icon="shutdown.png"
