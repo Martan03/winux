@@ -5,21 +5,22 @@ export function execute(input, env, wm, setView) {
     setView(prev => [...prev, prompt + input + '\n']);
 
     const parts = input.split('|');
-    if (parts.length <= 0) {
-        executePart(part, env, wm, env.error);
-    }
 
     let output = '';
     const print = (val) => output += val;
 
+    let ret = 0;
     for (const part of parts) {
         env.stdin = output;
         output = '';
-        executePart(part, env, wm, print);
+        const res = executePart(part, env, wm, print);
+        if (res)
+            ret = res;
     }
     env.print = env.error;
     env.print(output);
     env.stdin = '';
+    env.vars['?'] = ret;
 }
 
 function executePart(input, env, wm, print) {
@@ -30,38 +31,37 @@ function executePart(input, env, wm, print) {
         return '';
     });
 
+    let ret;
     if (redirect && redirect !== '') {
         let output = '';
         env.print = (val) => output += val;
 
-        executeCommand(command, env, wm);
+        ret = executeCommand(command, env, wm);
         env.fs.saveToFile(env.current, redirect.trim(), output);
     } else {
         env.print = print;
-        executeCommand(command, env, wm);
+        ret = executeCommand(command, env, wm);
     }
+
+    return ret;
 }
 
 function executeCommand(input, env, wm) {
     let [cmd, args] = splitInput(env, input);
 
     if (!cmd) {
-        return;
+        return 0;
     }
 
     switch (cmd) {
         case "cd":
-            changeDir(env, args);
-            break;
+            return changeDir(env, args);
         case "echo":
-            echo(env, args);
-            break;
+            return echo(env, args);
         case "export":
-            exportVar(env, args);
-            break;
+            return exportVar(env, args);
         case "help":
-            help(env);
-            break;
+            return help(env);
         default:
             let dir = env.get(env.vars['PATH']);
             if (cmd.startsWith('./') ||
@@ -72,14 +72,13 @@ function executeCommand(input, env, wm) {
             const file = env.fs.get(dir, cmd);
 
             if (!file)
-                error(env, `${cmd}: command not found`);
+                return error(env, `${cmd}: command not found`);
             else if (file.type === 'exe')
-                executeProgram(file, cmd, args, env);
+                return executeProgram(file, cmd, args, env);
             else if (file.type === 'app')
-                openApp(file, wm);
+                return openApp(file, wm);
             else
-                error(env, `${cmd}: file not executable`)
-            break;
+                return error(env, `${cmd}: file not executable`)
     }
 }
 
@@ -99,6 +98,7 @@ function executeProgram(file, cmd, args, env) {
 
 function openApp(file, wm) {
     wm.add(file);
+    return 0;
 }
 
 function error(env, err, ret = 1) {

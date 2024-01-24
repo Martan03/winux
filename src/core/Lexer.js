@@ -86,7 +86,7 @@ function notQuoted(env, input) {
 }
 
 function variable(env, input) {
-    const regex = /^\$([a-zA-Z_][a-zA-Z0-9_]*)/
+    const regex = /^\$(\?|[a-zA-Z_][a-zA-Z0-9_]*)/
     const res = input.match(regex);
 
     return [env.vars[res[1]] ?? '', res[0].length];
