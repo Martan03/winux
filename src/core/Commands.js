@@ -192,7 +192,13 @@ const cal = `function main(env, args) {
                 env.print('   ');
                 continue;
             }
-            env.print(cnt.toString().padStart(2, ' ') + ' ');
+
+            const dayNum = cnt.toString().padStart(2, ' ');
+            if (firstDay.getDate() == now.getDate()) {
+                env.print('<span class="term-highlight">' + dayNum + '</span> ');
+            } else {
+                env.print(dayNum + ' ');
+            }
             firstDay.setDate(firstDay.getDate() + 1);
             cnt++;
         }
