@@ -243,7 +243,9 @@ const list = `function main(env, args) {
         }
 
         let res = args.length > 1 ? \`\${arg}:\\n\` : '';
-        res += Object.keys(dir.children).join(' ');
+        res += Object.keys(dir.children)
+            .map(key => key.includes(' ') ? \`'\${key}'\` : key)
+            .join(' ');
         env.print(res + '\\n');
     }
     return ret;

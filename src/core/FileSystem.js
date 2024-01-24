@@ -95,7 +95,7 @@ const useFs = () => {
         const pathArr = path.split('/').filter(item => item !== '');
 
         let current = dir;
-        if (path.startsWith('/'))
+        if (path.startsWith('/') || path.startsWith('~'))
             current = root;
 
         for (const item of pathArr) {
