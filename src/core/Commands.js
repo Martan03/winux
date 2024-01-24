@@ -115,7 +115,7 @@ function changeDir(env, args) {
     if (args.length > 1)
         return error(env, `cd: too many arguments`);
 
-    const current = env.getDir(args[0] ?? '');
+    const current = env.getDir(args[0] ?? env.vars['HOME']);
     if (!current)
         return error(env, `cd: ${args[0]}: No such file or directory`);
 

@@ -78,7 +78,10 @@ const useFs = () => {
         if (!parent || name == '..')
             return false;
 
-        parent.children[name] = {name, value, type, parent};
+        const child = parent.children[name];
+        parent.children[name] = {
+            name, value, type: child?.type ?? type, parent
+        };
     }
 
     /// Creates directory based on given path
