@@ -9,6 +9,7 @@ export class Environment {
             'USER': 'visitor',
             '?': 0,
         }
+        this.stdin = '';
 
         this.print = (val) => setView(prev => [...prev, val]);
         this.error = (val) => setView(prev => [...prev, val]);

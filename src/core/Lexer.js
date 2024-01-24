@@ -25,7 +25,8 @@ export function splitInput(env, input) {
         res += result;
         left = remain;
     }
-    args.push(res);
+    if (res !== '')
+        args.push(res);
 
     return [args.shift(), args];
 }

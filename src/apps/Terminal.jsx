@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Environment } from "../core/Environment";
-import { exec } from "../core/Commands";
+import { execute } from "../core/Commands";
 
 function Input({cmd, cursor}) {
     return (
@@ -59,8 +59,7 @@ function Terminal({id, fs, wm}) {
         } else if (e.key === 'Home') {
             setPos(0);
         } else if (e.key === 'Enter') {
-            //execute(cmd, env, wm, setView);
-            exec(cmd, env, wm, setView);
+            execute(cmd, env, wm, setView);
             setHistoryId(-1);
             setHistory(prev => [
                 cmd,

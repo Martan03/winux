@@ -1,11 +1,30 @@
 import { splitInput } from "./Lexer";
 
-export function exec(input, env, wm, setView) {
+export function execute(input, env, wm, setView) {
     const prompt = `${env.vars['USER']}@winux ${env.getPath()}$ `;
     setView(prev => [...prev, prompt + input + '\n']);
 
+    const parts = input.split('|');
+    if (parts.length <= 0) {
+        executePart(part, env, wm, env.error);
+    }
+
+    let output = '';
+    const print = (val) => output += val;
+
+    for (const part of parts) {
+        env.stdin = output;
+        output = '';
+        executePart(part, env, wm, print);
+    }
+    env.print = env.error;
+    env.print(output);
+    env.stdin = '';
+}
+
+function executePart(input, env, wm, print) {
     let redirect = '';
-    const regex = />\s*\w+/g;
+    const regex = />\s*[\w/]+/g;
     const command = input.replace(regex, match => {
         redirect = match.trim().slice(1);
         return '';
@@ -15,15 +34,15 @@ export function exec(input, env, wm, setView) {
         let output = '';
         env.print = (val) => output += val;
 
-        execute(command, env, wm);
+        executeCommand(command, env, wm);
         env.fs.saveToFile(env.current, redirect.trim(), output);
     } else {
-        env.print = env.error;
-        execute(command, env, wm);
+        env.print = print;
+        executeCommand(command, env, wm);
     }
 }
 
-function execute(input, env, wm) {
+function executeCommand(input, env, wm) {
     let [cmd, args] = splitInput(env, input);
 
     if (!cmd) {
@@ -110,11 +129,19 @@ function echo(env, args) {
     return 0;
 }
 
+/// export - sets value of the variable
 function exportVar(env, args) {
+    let ret = 0;
     for (const arg of args) {
         const [name, val] = arg.split('=');
-        env.vars[name] = val;
+        if (name.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)) {
+            env.vars[name] = val;
+        } else {
+            ret = error(env, `export: '${arg}' not a valid identifier`);
+        }
     }
+
+    return ret;
 }
 
 /// help - displays help
@@ -141,7 +168,11 @@ Commands:
 
 /// cat - displays content of the file
 const cat = `function main(env, args) {
-    if (args.length !== 1) {
+    if (args.length === 0) {
+        env.print(env.stdin);
+        return 0;
+    }
+    else if (args.length !== 1) {
         env.error('bash: cat: Invalid number of arguments\\n');
         return 1;
     }
