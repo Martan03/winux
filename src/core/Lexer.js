@@ -28,6 +28,9 @@ export function splitInput(env, input) {
             res = '';
             continue;
         }
+        else if (left[0] === '#' && res == '') {
+            break;
+        }
 
         let result, remain;
         if (left[0] === '"') {
