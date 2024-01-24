@@ -230,6 +230,11 @@ const clear = `function main(env, args) {
     return 0;
 }`;
 
+/// false - returns 1
+const falseCommand = `function main(env, args) {
+    return 1
+}`;
+
 /// ls - lists all files and directories from given directory
 const list = `function main(env, args) {
     if (args.length <= 0)
@@ -314,7 +319,7 @@ function main(env, args) {
 }`;
 
 /// touch - creates file
-const touch =`function main(env, args) {
+const touch = `function main(env, args) {
     let ret = 0;
     for (const arg of args) {
         if (env.get(arg))
@@ -331,6 +336,11 @@ const touch =`function main(env, args) {
     return ret;
 }`;
 
+/// true - returns 0
+const trueCommand = `function main(env, args) {
+    return 0;
+}`
+
 /// Gets all commands in file system format
 export function getCommands(parent) {
     return {
@@ -342,6 +352,9 @@ export function getCommands(parent) {
         },
         clear: {
             name: 'clear', type: 'exe', parent, value: clear,
+        },
+        false: {
+            name: 'false', type: 'exe', parent, value: falseCommand,
         },
         ls: {
             name: 'ls', type: 'exe', parent, value: list,
@@ -357,6 +370,9 @@ export function getCommands(parent) {
         },
         touch: {
             name: 'touch', type: 'exe', parent, value: touch,
+        },
+        true: {
+            name: 'true', type: 'exe', parent, value: trueCommand,
         },
     }
 }

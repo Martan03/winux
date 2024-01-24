@@ -93,7 +93,8 @@ function notQuoted(env, input) {
     let res = '';
     let i = 0;
     for (; i < input.length; i++) {
-        if (input[i] === ' ' || input[i] === '"' || input[i] === "'")
+        if (input[i] === ' ' || input[i] === '"' ||
+            input[i] === "'" || input[i] === '>')
             break;
 
         if (input[i] === '\\') {
