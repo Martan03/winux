@@ -41,12 +41,14 @@ function doubleQuotes(env, input) {
                 res += '\\';
             else if (input[i] === '"')
                 res += '"';
+            else if (input[i] === '$')
+                res += '$';
             else
                 res += `\\${input[i] ?? ''}`;
         } else if (input[i] === '$') {
             const [result, index] = variable(env, input.slice(i));
             res += result;
-            i = index - 1;
+            i += index - 1;
         } else {
             res += input[i];
         }
@@ -76,7 +78,7 @@ function notQuoted(env, input) {
         } else if (input[i] === '$') {
             const [result, index] = variable(env, input.slice(i));
             res += result;
-            i = index - 1;
+            i += index - 1;
         } else {
             res += input[i];
         }
@@ -88,6 +90,8 @@ function notQuoted(env, input) {
 function variable(env, input) {
     const regex = /^\$(\?|[a-zA-Z_][a-zA-Z0-9_]*)/
     const res = input.match(regex);
+    if (!res)
+        return ['$', 1];
 
     return [env.vars[res[1]] ?? '', res[0].length];
 }

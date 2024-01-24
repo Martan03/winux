@@ -205,7 +205,7 @@ const chmod = `function main(env, args) {
 
     let ret = 0;
     for (const arg of args) {
-        const file = en.get(arg);
+        const file = env.get(arg);
         if (!file) {
             env.error(
                 "chmod: cannot access '" + arg +
