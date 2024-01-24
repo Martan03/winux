@@ -137,7 +137,7 @@ function exportVar(env, args) {
     for (const arg of args) {
         const [name, val] = arg.split('=');
         if (name.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)) {
-            env.vars[name] = val;
+            env.vars[name] = val ?? '';
         } else {
             ret = error(env, `export: '${arg}' not a valid identifier`);
         }
