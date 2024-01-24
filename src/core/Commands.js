@@ -170,6 +170,38 @@ Commands:
 //                              $PATH programs                               //
 //>=========================================================================<//
 
+/// cal - displays cli calendar
+const cal = `function main(env, args) {
+    const now = new Date();
+    let firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    const month = now.toLocaleString(
+        'en-US', {month: 'long', year: 'numeric'}
+    );
+    const pad = 20 - (20 - month.length) / 2;
+    env.print(month.padStart(pad, ' ') + '\\n');
+
+    const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+    env.print(days.join(' ') + '\\n');
+
+    let cnt = 1;
+    while (firstDay <= lastDay) {
+        for (let j = 0; j < 7 && firstDay <= lastDay; j++) {
+            if (firstDay.getDay() !== j) {
+                env.print('   ');
+                continue;
+            }
+            env.print(cnt.toString().padStart(2, ' ') + ' ');
+            firstDay.setDate(firstDay.getDate() + 1);
+            cnt++;
+        }
+        env.print('\\n');
+    }
+
+    return 0;
+}`;
+
 /// cat - displays content of the file
 const cat = `function main(env, args) {
     if (args.length === 0) {
@@ -344,6 +376,9 @@ const trueCommand = `function main(env, args) {
 /// Gets all commands in file system format
 export function getCommands(parent) {
     return {
+        cal: {
+            name: 'cal', type: 'exe', parent, value: cal,
+        },
         cat: {
             name: 'cat', type: 'exe', parent, value: cat,
         },

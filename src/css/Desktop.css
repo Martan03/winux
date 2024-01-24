@@ -422,6 +422,11 @@ h1 {
     line-height: 20px;
 }
 
+.term-highlight {
+    background-color: #c5c5c5;
+    color: black;
+}
+
 .dialog {
     width: 100%;
     height: 100vh;
